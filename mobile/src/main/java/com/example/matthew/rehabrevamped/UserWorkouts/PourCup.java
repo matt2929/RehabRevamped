@@ -149,9 +149,20 @@ public class PourCup implements WorkoutSession {
     }
 
     @Override
-    public boolean saveGripPosition(float accX, float accY, float accZ) {
-        return true;
+    public String stringOut() {
+        return null;
     }
+
+    @Override
+    public Float dataOut() {
+        return ((float) (pitcher[0] + pitcher[1] + pitcher[2] + pitcher[3]) / (sizeOfQuarters * 4));
+    }
+
+    @Override
+    public void addTouche(float x, float y) {
+
+    }
+
 
     @Override
     public void holdAccuracy(float accX, float accY, float accZ) {
@@ -185,20 +196,7 @@ public class PourCup implements WorkoutSession {
         return "Pour Water";
     }
 
-    @Override
-    public int xPostiontDisplay() {
-        return 0;
-    }
 
-    @Override
-    public int yPostiontDisplay() {
-        return 0;
-    }
-
-    @Override
-    public double accuracyProgression() {
-        return 0;
-    }
 
     @Override
     public String sayHowToHoldCup() {

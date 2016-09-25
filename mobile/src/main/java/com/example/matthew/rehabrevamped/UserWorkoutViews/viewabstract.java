@@ -5,33 +5,32 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 /**
- * Created by Matthew on 9/24/2016.
+ * Created by Matthew on 9/25/2016.
  */
 
-public class TwistCupView extends viewabstract {
-    public TwistCupView(Context context) {
+public abstract class viewabstract extends RelativeLayout implements WorkoutView{
+    public viewabstract(Context context) {
         super(context);
     }
 
-    public TwistCupView(Context context, AttributeSet attrs) {
+    public viewabstract(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TwistCupView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public viewabstract(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public TwistCupView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public viewabstract(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
     public void dataInput(float f) {
-
     }
 
     @Override
     public void stringInput(String s) {
-        super.stringInput(s);
+
     }
 }

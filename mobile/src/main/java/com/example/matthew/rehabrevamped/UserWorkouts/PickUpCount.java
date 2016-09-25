@@ -112,10 +112,6 @@ public class PickUpCount implements WorkoutSession {
         return "\n\n\nPut away " + pickupCount + " time(s).";
     }
 
-    @Override
-    public boolean saveGripPosition(float gravX, float gravY, float gravZ) {
-            return true;
-    }
 
 
     @Override
@@ -151,18 +147,18 @@ public class PickUpCount implements WorkoutSession {
     }
 
     @Override
-    public int xPostiontDisplay() {
-        return 0;
+    public String stringOut() {
+        return "Pick Up Count: "+pickupCount;
     }
 
     @Override
-    public int yPostiontDisplay() {
-        return 10;
+    public Float dataOut() {
+        return null;
     }
 
     @Override
-    public double accuracyProgression() {
-        return gripAnalysis.getGripAnalysisProgression();
+    public void addTouche(float x, float y) {
+
     }
 
     @Override

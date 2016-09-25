@@ -10,7 +10,9 @@ import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PickUpCountView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PourCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.TwistCupView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.WorkoutView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.viewabstract;
 import com.example.matthew.rehabrevamped.UserWorkouts.*;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class WorkoutSelectionScreen extends AppCompatActivity {
     Button pickUpButt, twistButt, pourButt, unlockButt, leftHand, rightHand;
     View fakeView;
     static com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession CurrentWorkout;
-    static WorkoutView CurrentWorkoutView;
+    static viewabstract CurrentWorkoutView;
     static boolean isLeftHand;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,8 @@ public class WorkoutSelectionScreen extends AppCompatActivity {
             }
         });
         setWorkoutPickView();
+        CurrentWorkout = new UnlockPhone();
+        CurrentWorkoutView = new UnlockPhoneView(getApplicationContext());
     }
 
     public void setWorkoutPickView() {

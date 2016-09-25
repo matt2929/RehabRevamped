@@ -63,10 +63,20 @@ WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
     }
 
     @Override
-    public boolean saveGripPosition(float gravX, float gravY, float gravZ) {
-        startTime = System.currentTimeMillis();
-        return true;
+    public String stringOut() {
+        return null;
     }
+
+    @Override
+    public Float dataOut() {
+        return null;
+    }
+
+    @Override
+    public void addTouche(float x, float y) {
+
+    }
+
 
     @Override
     public void holdAccuracy(float accX, float accY, float accZ) {
@@ -102,20 +112,7 @@ WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
         return null;
     }
 
-    @Override
-    public int xPostiontDisplay() {
-        return 0;
-    }
 
-    @Override
-    public int yPostiontDisplay() {
-        return 10;
-    }
-
-    @Override
-    public double accuracyProgression() {
-        return 0;
-    }
 
     @Override
     public String sayHowToHoldCup() {

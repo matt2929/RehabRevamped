@@ -61,10 +61,20 @@ public class TwistCup implements WorkoutSession {
     }
 
     @Override
-    public boolean saveGripPosition(float accX, float accY, float accZ) {
-        return gripAnalysis.saveGripPosition(accX, accY, accZ);
+    public String stringOut() {
+        return null;
+    }
+
+    @Override
+    public Float dataOut() {
+        return null;
+    }
+
+    @Override
+    public void addTouche(float x, float y) {
 
     }
+
 
     @Override
     public void holdAccuracy(float accX, float accY, float accZ) {
@@ -120,20 +130,6 @@ public class TwistCup implements WorkoutSession {
         return "Twist Count";
     }
 
-    @Override
-    public int xPostiontDisplay() {
-        return 0;
-    }
-
-    @Override
-    public int yPostiontDisplay() {
-        return 10;
-    }
-
-    @Override
-    public double accuracyProgression() {
-        return gripAnalysis.getGripAnalysisProgression();
-    }
 
     @Override
     public String sayHowToHoldCup() {

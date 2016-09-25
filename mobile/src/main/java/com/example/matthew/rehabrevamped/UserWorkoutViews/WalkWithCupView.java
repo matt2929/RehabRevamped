@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
  * Created by Matthew on 9/24/2016.
  */
 
-public class WalkWithCupView extends RelativeLayout implements WorkoutView{
+public class WalkWithCupView extends viewabstract{
     public WalkWithCupView(Context context) {
         super(context);
     }

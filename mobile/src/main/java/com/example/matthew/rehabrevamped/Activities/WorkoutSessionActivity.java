@@ -12,10 +12,14 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.matthew.rehabrevamped.UserWorkoutViews.WorkoutView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.viewabstract;
 import com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
 import com.example.matthew.rehabrevamped.Utilities.SaveData;
@@ -42,7 +46,6 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private float accX = 0, accY = 0, accZ = 0;
     private float gyroX = 0, gyroY = 0, gyroZ = 0;
     private Sensor mAcc, mGyro, mStep;
-    private TextView textView;
     AudioManager mgr = null;
     private WorkoutSession currentWorkout;
     public boolean workoutInProgress = true;
@@ -51,12 +54,21 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private SampleAverage sampleAverage = new SampleAverage();
     TextToSpeech tts;
     String saveString = "";
+    viewabstract currentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RelativeLayout currentView = (RelativeLayout) WorkoutSelectionScreen.CurrentWorkoutView;
-        setContentView(currentView);
+        currentView = WorkoutSelectionScreen.CurrentWorkoutView;
+        setContentView((RelativeLayout) currentView);
+        currentView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                currentWorkout.addTouche(motionEvent.getX(), motionEvent.getY());
+                return true;
+            }
+        });
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 50, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
@@ -199,6 +211,15 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                         +hour + ":" + minute + ":" + second
                                 + "," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
                                 + gyroX + "," + gyroY + "," + gyroZ + ";";
+
+                //
+                if (currentWorkout.dataOut() != null) {
+                    currentView.dataInput(currentWorkout.dataOut());
+                }
+
+                currentView.stringInput(currentWorkout.stringOut());
+                currentView.invalidate();
+
                 //sendAMessageToWatch(MessagingValues.WORKOUTDISPLAYDATA + ",\n\n\n\n" + currentWorkout.result());
                 sendWorkoutStringToWatchCount = 0;
             }

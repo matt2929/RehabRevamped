@@ -12,10 +12,6 @@ public interface WorkoutSession {
 
     public boolean workoutFinished();
 
-    public String result();
-
-    public boolean saveGripPosition(float accX, float accY, float accZ);
-
     public void holdAccuracy(float accX, float accY, float accZ);
 
     public boolean shouldISaySomething();
@@ -27,13 +23,17 @@ public interface WorkoutSession {
 
     public String getWorkoutName();
 
-    public int xPostiontDisplay();
-
-    public int yPostiontDisplay();
-
-    public double accuracyProgression();
 
     public String sayHowToHoldCup();
 
     public int getGrade();
+
+    public String result();
+
+    public String stringOut();
+
+    public Float dataOut();
+
+    public void addTouche(float x, float y);
+
 }
