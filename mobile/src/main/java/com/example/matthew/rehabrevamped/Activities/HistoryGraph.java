@@ -1,7 +1,10 @@
 package com.example.matthew.rehabrevamped.Activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,7 @@ import com.example.matthew.rehabrevamped.Utilities.WorkoutHistoricalData;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HistoryGraph extends AppCompatActivity {
+public class HistoryGraph extends Activity {
 
     CustomViewGraph graphDataView;
     ListView listView;
@@ -32,7 +35,6 @@ public class HistoryGraph extends AppCompatActivity {
     TextView textView;
     CheckBox checkBox;
     Button timeDurationButton;
-    Button shakeTypeButton;
     int biggest = Integer.MIN_VALUE;
     int smallest = Integer.MAX_VALUE;
     int currentDuration = 0;
@@ -40,6 +42,7 @@ public class HistoryGraph extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         for (int i = 0; i < HistoryList.AllWorkOuts.size(); i++) {
             if (HistoryList.AllWorkOuts.get(i).getWorkoutName().equals(HistoryList.workoutName)) {
                 sessions.add(HistoryList.AllWorkOuts.get(i));
@@ -56,7 +59,6 @@ public class HistoryGraph extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.pointInfo);
         checkBox = (CheckBox) findViewById(R.id.line);
         timeDurationButton = (Button) findViewById(R.id.setDataDuration);
-        shakeTypeButton = (Button) findViewById(R.id.setDataType);
         setupViews();
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -70,12 +72,6 @@ public class HistoryGraph extends AppCompatActivity {
                 changeDuration();
             }
         });
-        shakeTypeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeShake();
-            }
-        });
         graphDataView.setValues(intArrlist);
         listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, stringArrlist));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,6 +82,8 @@ public class HistoryGraph extends AppCompatActivity {
                 } else {
                     graphDataView.selectHighlightedData((intArrlist.size() - i) - 1);
                     textView.setText("The selected workout had a total of " + (intArrlist.get(i-1)).intValue() + " shakes.");
+                    textView.setTextColor(Color.WHITE);
+                    textView.setShadowLayer(20,5,5,Color.BLACK);
                 }
             }
         });
@@ -109,16 +107,7 @@ public class HistoryGraph extends AppCompatActivity {
             for (int i = 0; i < sessions.size(); i++) {
                 WorkoutHistoricalData.WorkoutSession s = sessions.get(i);
 
-                if (currentShakeType == 0) {
-                    start = (float) sessions.get(i).getShakeList()[3];
-                } else if (currentShakeType == 1) {
-                    start = (float) sessions.get(i).getShakeList()[0];
-                } else if (currentShakeType == 2) {
-                    start = (float) sessions.get(i).getShakeList()[1];
-                } else if (currentShakeType == 3) {
-                    start = (float) sessions.get(i).getShakeList()[2];
-                }
-
+                start = (float) sessions.get(i).getJerkScore();
                 stringArrlist.add((s.get_Cal().get(Calendar.MONTH) + 1) + "/" + s.get_Cal().get(Calendar.DAY_OF_MONTH)+ "/" + s.get_Cal().get(Calendar.YEAR)
                         + "\nTime: " + s.get_Cal().get(Calendar.HOUR_OF_DAY) + ":" + s.get_Cal().get(Calendar.MINUTE) + ":" + s.get_Cal().get(Calendar.SECOND) + "\nShakes: " + start + "\nHand: " + s.isLeftHand());
                 intArrlist.add((float) start);
@@ -139,9 +128,8 @@ public class HistoryGraph extends AppCompatActivity {
 
                     // Initialize a TextView for ListView each Item
                     TextView tv = (TextView) view.findViewById(android.R.id.text1);
-
+                    tv.setTextColor(Color.WHITE);
                     // Set the text color of TextView (ListView Item)
-                    tv.setTextColor(Color.BLACK);
 
                     // Generate ListView Item using TextView
                     return view;
@@ -152,7 +140,11 @@ public class HistoryGraph extends AppCompatActivity {
             listView.invalidate();
         }
     }
-
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
     public void changeDuration() {
         sessions = new ArrayList<WorkoutHistoricalData.WorkoutSession>();
 
@@ -193,7 +185,7 @@ public class HistoryGraph extends AppCompatActivity {
                 currentDuration = 3;
                 break;
             case 3:
-                timeDurationButton.setText("Duration\nAll");
+                timeDurationButton.setText("Duration\nAll Time");
                 currentDuration = 0;
                 sessions = new ArrayList<WorkoutHistoricalData.WorkoutSession>(temp);
                 break;
@@ -201,25 +193,4 @@ public class HistoryGraph extends AppCompatActivity {
         setupViews();
     }
 
-    public void changeShake() {
-        switch (currentShakeType) {
-            case 0:
-                shakeTypeButton.setText("Shake Type\nSmall");
-                currentShakeType = 1;
-                break;
-            case 1:
-                shakeTypeButton.setText("Shake Type\nMed");
-                currentShakeType = 2;
-                break;
-            case 2:
-                shakeTypeButton.setText("Shake Type\nLarge");
-                currentShakeType = 3;
-                break;
-            case 3:
-                shakeTypeButton.setText("Shake Type\nAll");
-                currentShakeType = 0;
-                break;
-        }
-        setupViews();
-    }
 }

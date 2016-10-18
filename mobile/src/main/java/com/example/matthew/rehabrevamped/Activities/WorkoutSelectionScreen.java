@@ -1,6 +1,10 @@
 package com.example.matthew.rehabrevamped.Activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +21,8 @@ import com.example.matthew.rehabrevamped.UserWorkouts.*;
 
 import java.util.ArrayList;
 
-public class WorkoutSelectionScreen extends AppCompatActivity {
+public class WorkoutSelectionScreen extends
+        Activity {
     ArrayList<View> pickHandView = new ArrayList<>();
     ArrayList<View> selectWorkoutView = new ArrayList<>();
     Button pickUpButt, twistButt, pourButt, unlockButt, leftHand, rightHand;
@@ -30,6 +35,7 @@ public class WorkoutSelectionScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_selection_screen);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         pickUpButt = (Button) findViewById(R.id.pickupcupchoice);
         twistButt = (Button) findViewById(R.id.twistcupchoice);
@@ -115,7 +121,11 @@ public class WorkoutSelectionScreen extends AppCompatActivity {
         }
 
     }
-
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
     public void setViewHandSelection() {
         for (View v : pickHandView) {
             v.setVisibility(View.VISIBLE);

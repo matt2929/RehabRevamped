@@ -1,6 +1,7 @@
 package com.example.matthew.rehabrevamped.Utilities;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.EOFException;
@@ -36,16 +37,17 @@ public class Serialize implements Serializable {
         context = c;
     }
 
-    public void Save(Context context, String name, int shakelist[], int grade, boolean leftHand, String extraString) {
+    public void Save(Context context, String name, float jerkScore, int grade, boolean leftHand, String extraString) {
         //UserList ul = new UserList(a);
-ArrayList<WorkoutHistoricalData.WorkoutSession> arrayWork = getUsers(context);
+        Log.e("length",""+getUsers(context).size());
+        ArrayList<WorkoutHistoricalData.WorkoutSession> arrayWork = getUsers(context);
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);
             ObjectOutputStream oout = new ObjectOutputStream(out);
             // write something in the file
             //String workoutname, int[] shakelist, String workoutinfo, int grade, boolean leftHand
-            arrayWork.add(0,new WorkoutHistoricalData.WorkoutSession(name,shakelist,name+extraString,grade,leftHand));
+            arrayWork.add(0,new WorkoutHistoricalData.WorkoutSession(name,jerkScore,name+extraString,grade,leftHand));
             oout.writeObject(arrayWork);
             oout.flush();
         } catch (FileNotFoundException e) {

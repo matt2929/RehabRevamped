@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.example.matthew.rehabrevamped.R;
+import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
 
 /**
@@ -175,10 +176,9 @@ public class PourCup implements WorkoutSession {
     }
 
     @Override
-    public int[] ShakeNum() {
-        return workoutShakeTrack.getShakeCount();
+    public float getJerkScore() {
+        return 0f;
     }
-
 
     @Override
     public String whatToSay() {

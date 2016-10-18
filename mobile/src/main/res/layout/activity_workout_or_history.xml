@@ -35,7 +35,6 @@
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="18sp"
-        android:textColor="@color/cast_expanded_controller_background_color"
         android:layout_marginBottom="65dp"
         android:layout_above="@+id/chooseworkout"
         android:layout_alignParentStart="true" />

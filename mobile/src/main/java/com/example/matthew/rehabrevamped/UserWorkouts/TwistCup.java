@@ -1,8 +1,10 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.matthew.rehabrevamped.Utilities.GripAnalysis;
+import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
 
 /**
@@ -19,32 +21,44 @@ public class TwistCup implements WorkoutSession {
     boolean shouldITalk = false;
     double lastSlope = 0;
     double collisionNumber = 0;
-
+    boolean iAnnouced = false;
+    long startSpeak = System.currentTimeMillis();
     float lastGyroZ = 0;
     GripAnalysis gripAnalysis = new GripAnalysis();
     WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
+    JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(1);
+
     public TwistCup() {
 
     }
 
 
-
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
-        workoutShakeTrack.analyseData(accX, accY, accZ);
-        float differenceVAL = Math.abs(gravX - lastGyroZ);
-        lastGyroZ = gravX;
-        long nowTime = System.currentTimeMillis();
+        Log.e("wut",""+(Math.abs(startSpeak - System.currentTimeMillis())));
+        if ((Math.abs(startSpeak - System.currentTimeMillis()) > 10000)) {
+            if (iAnnouced == false) {
+                shouldITalk = true;
+                whatToSay = "Begin";
+                iAnnouced = true;
+            } else {
+                jerkScoreAnalysis.jerkAdd(accX, accY, accZ);
+     //           workoutShakeTrack.analyseData(accX, accY, accZ);
+                float differenceVAL = gravX - lastGyroZ;
+                lastGyroZ = gravX;
+                Log.e("gyro: ", "" + differenceVAL);
+                long nowTime = System.currentTimeMillis();
+                //  holdAccuracy(accX, accY, accZ);
 
-        holdAccuracy(accX, accY, accZ);
-
-        if (differenceVAL < -3 && lastDifference > -3&&(Math.abs(nowTime-startTime))>1000) {
-            shouldITalk = true;
-            pickupCount++;
-            whatToSay = "" + pickupCount;
-            startTime= System.currentTimeMillis();
+                if (differenceVAL < 3 && lastDifference > 3 && (Math.abs(nowTime - startTime)) > 1000) {
+                    shouldITalk = true;
+                    pickupCount++;
+                    whatToSay = "" + pickupCount;
+                    startTime = System.currentTimeMillis();
+                }
+                lastDifference = differenceVAL;
+            }
         }
-        lastDifference = differenceVAL;
     }
 
     @Override
@@ -97,10 +111,9 @@ public class TwistCup implements WorkoutSession {
     }
 
     @Override
-    public int[] ShakeNum() {
-        return workoutShakeTrack.getShakeCount();
+    public float getJerkScore() {
+        return jerkScoreAnalysis.getJerkAverage();
     }
-
 
     @Override
     public String whatToSay() {
@@ -111,7 +124,7 @@ public class TwistCup implements WorkoutSession {
 
     @Override
     public int getGrade() {
-        return 0;
+        return jerkScoreAnalysis.getJerkAverage().intValue();
     }
 
     @Override
@@ -133,7 +146,7 @@ public class TwistCup implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "Hold the cup in your left hand. Twist your wrist clockwise than return.";
+        return "Hold the cup in your hand. Hold the cup out in front of you. Start with the cup in the upright position. Twist your wrist clockwise as far as possible than back to the upright position. Please Start when I say begin.";
 
     }
 }

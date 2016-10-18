@@ -11,6 +11,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,6 +61,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentView = WorkoutSelectionScreen.CurrentWorkoutView;
+
         setContentView((RelativeLayout) currentView);
         currentView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -71,7 +73,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 50, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+        mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 10, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         tts = new TextToSpeech(this, this);
         mSensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
         List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
@@ -231,7 +233,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 saveData.saveData(saveString);
                 try {
                     Serialize serialize = new Serialize(getApplicationContext());
-                    serialize.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.ShakeNum(), currentWorkout.getGrade(), WorkoutSelectionScreen.isLeftHand, currentWorkout.saveData());
+                    serialize.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), WorkoutSelectionScreen.isLeftHand, currentWorkout.saveData());
                     Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "%", Toast.LENGTH_LONG).show();
 
                 } catch (IOException e) {
@@ -246,7 +248,11 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         }
 
     }
-
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -268,10 +274,11 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
     @Override
     public void onInit(int i) {
-        tts.speak(currentWorkout.sayHowToHoldCup(), TextToSpeech.QUEUE_ADD, null);
+
         if (i == TextToSpeech.SUCCESS) {
             // Setting speech language
             int result = tts.setLanguage(Locale.ENGLISH);
+
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 // Cook simple toast message with message
@@ -290,5 +297,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                     .show();
             Log.e("TTS", "Initilization Failed");
         }
+        tts.speak(currentWorkout.sayHowToHoldCup(), TextToSpeech.QUEUE_ADD, null);
     }
+
 }

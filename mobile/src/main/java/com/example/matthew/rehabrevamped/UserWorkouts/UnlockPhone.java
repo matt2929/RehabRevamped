@@ -1,6 +1,7 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
+import android.provider.Settings;
 
 /**
  * Created by Matthew on 9/25/2016.
@@ -13,6 +14,7 @@ public class UnlockPhone implements WorkoutSession {
     float startX = 0, startY = 0;
     boolean peaked = false;
     boolean returnedToStart = false;
+    int count=0;
 
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
@@ -27,14 +29,16 @@ public class UnlockPhone implements WorkoutSession {
                 peaked = true;
             }
             if (peaked && (x >= startX)) {
-                returnedToStart = true;
+                count++;
+                firstSpot=false;
+                peaked=false;
             }
         }
     }
 
     @Override
     public boolean workoutFinished() {
-        return returnedToStart;
+        return count==10;
     }
 
     @Override
@@ -48,8 +52,8 @@ public class UnlockPhone implements WorkoutSession {
     }
 
     @Override
-    public int[] ShakeNum() {
-        return new int[0];
+    public float getJerkScore() {
+        return 0f;
     }
 
     @Override
@@ -64,7 +68,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String getWorkoutName() {
-        return null;
+        return "Unlock Phone";
     }
 
     @Override
@@ -84,7 +88,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String stringOut() {
-        return x+","+y;
+        return x+","+y+",count: "+count;
     }
 
     @Override

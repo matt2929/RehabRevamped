@@ -1,8 +1,10 @@
 package com.example.matthew.rehabrevamped.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,22 +36,8 @@ public class HistoryList extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        WorkoutStrings.add("HistoryList\n");
         AllWorkOuts = serialize.getUsers(getApplicationContext());
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{15,25,35,61},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{13,23,32,61},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{12,22,32,62},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{12,22,32,67},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{10,20,30,80},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{1,2,3,100},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{15,25,35,110},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{13,23,32,115},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{12,22,32,120},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{12,22,32,150},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{10,20,30,175},"",50,true));
-        AllWorkOuts.add(new WorkoutHistoricalData.WorkoutSession("Pickup",new int[]{1,2,3,200},"",50,true));
-
+        WorkoutStrings.add("HistoryList\n");
         for (WorkoutHistoricalData.WorkoutSession s : AllWorkOuts) {
             String hand = "";
             if (s.isLeftHand()) {
@@ -63,10 +51,7 @@ public class HistoryList extends Activity {
                             + "\nWorkout Name: " + s.getWorkoutName()
                             + "\nHAND: <" + hand + ">"
                             + "\nGRADE: " + s.getGrade() + "%"
-                            + "\nShakes---\nS: " + s.getShakeList()[0]
-                            + "\nM: " + s.getShakeList()[1]
-                            + "\nL: " + s.getShakeList()[2]
-                            + "\nTotal: " + s.getShakeList()[3]);
+                            + "\nJerk Score---\nS: " + s.getJerkScore());
         }
 
         lv = (ListView) findViewById(R.id.HistoryView);
@@ -74,12 +59,18 @@ public class HistoryList extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-               // AllWorkOuts = serialize.getUsers(getApplicationContext());
+                // AllWorkOuts = serialize.getUsers(getApplicationContext());
                 workoutPosition = i - 1;
                 workoutName = AllWorkOuts.get(workoutPosition).getWorkoutName();
                 Intent intent = new Intent(getApplicationContext(), HistoryGraph.class);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
     }
 }

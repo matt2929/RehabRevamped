@@ -2,6 +2,7 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 
+import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
 
 /**
@@ -90,10 +91,9 @@ WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
     }
 
     @Override
-    public int[] ShakeNum() {
-        return workoutShakeTrack.getShakeCount();
+    public float getJerkScore() {
+        return 0f;
     }
-
 
     @Override
     public String whatToSay() {
@@ -109,7 +109,7 @@ WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
 
     @Override
     public String getWorkoutName() {
-        return null;
+        return "Walk With Cup";
     }
 
 

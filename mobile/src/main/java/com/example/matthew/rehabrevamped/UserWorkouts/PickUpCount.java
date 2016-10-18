@@ -120,8 +120,8 @@ public class PickUpCount implements WorkoutSession {
     }
 
     @Override
-    public int[] ShakeNum() {
-        return workoutShakeTrack.getShakeCount();
+    public float getJerkScore() {
+        return jerkScoreAnalysis.getJerkAverage();
     }
 
     @Override

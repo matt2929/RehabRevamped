@@ -16,7 +16,7 @@ public interface WorkoutSession {
 
     public boolean shouldISaySomething();
 
-    public int[] ShakeNum();
+   public float getJerkScore();
     public String whatToSay();
 
     public String saveData();

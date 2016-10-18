@@ -26,35 +26,35 @@ public class WorkoutHistoricalData implements Serializable {
     public int grade = 0;
 
     public static class WorkoutSession implements Serializable {
-        public Calendar cal = Calendar.getInstance();
-        public int[] shakeList = new int[0];
-        public String workoutInfo = "";
-        public String workoutName = "";
+        public Calendar CalendarData = Calendar.getInstance();
+        public float JerkScore =0;
+        public String WorkoutInfo = "";
+        public String WorkoutName = "";
         public boolean LeftHand = false;
         public int Grade = 0;
 
-        public WorkoutSession(String workoutname, int[] shakelist, String workoutinfo, int grade, boolean leftHand) {
-            workoutInfo = workoutinfo;
-            shakeList = shakelist;
-            workoutName = workoutname;
+        public WorkoutSession(String workoutname,float jerkscore, String workoutinfo, int grade, boolean leftHand) {
+            WorkoutInfo = workoutinfo;
+            JerkScore =jerkscore;
+            WorkoutName = workoutname;
             LeftHand=leftHand;
             Grade=grade;
         }
 
         public Calendar get_Cal() {
-            return cal;
+            return CalendarData;
         }
 
-        public int[] getShakeList() {
-            return shakeList;
+        public float getJerkScore() {
+            return JerkScore;
         }
 
         public String getWorkoutInfo() {
-            return workoutInfo;
+            return WorkoutInfo;
         }
 
         public String getWorkoutName() {
-            return workoutName;
+            return WorkoutName;
         }
 
         public int getGrade() {

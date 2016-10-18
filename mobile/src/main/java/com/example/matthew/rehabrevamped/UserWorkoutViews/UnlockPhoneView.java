@@ -17,6 +17,7 @@ public class UnlockPhoneView extends viewabstract {
     Paint whitePaint;
     Paint blackPaint;
     Float x = -1f, y = -1f;
+    String count="";
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -29,7 +30,7 @@ public class UnlockPhoneView extends viewabstract {
         //take normal (x,y) -> (-y,x)
         canvas.rotate(90f*3, 50f, 50f);
         canvas.drawText("Start Here",-(getHeight()-300),(getWidth()-100), whitePaint);
-        canvas.drawText("Use The Lock To Trace The Yellow Arc",-getHeight()/2,300, whitePaint);
+        canvas.drawText("Use The Lock To Trace The Yellow Arc "+count,-getHeight()/2,300, whitePaint);
         canvas.drawText("End Here",-100,getWidth()-100, whitePaint);
         canvas.restore();
     }
@@ -43,6 +44,7 @@ public class UnlockPhoneView extends viewabstract {
     public void stringInput(String s) {
         x = Float.valueOf(s.split("\\,")[0]);
         y = Float.valueOf(s.split("\\,")[1]);
+        count=s.split("\\,")[2];
     }
 
     public void initView() {
