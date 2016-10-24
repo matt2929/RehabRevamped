@@ -14,7 +14,7 @@ public class UnlockPhoneView extends viewabstract {
     Paint bluePaint;
     Paint redPaint;
     Paint yellowPaint;
-    Paint whitePaint;
+    Paint whitePaint,whitePaintCenter;
     Paint blackPaint;
     Float x = -1f, y = -1f;
     String count="";
@@ -22,16 +22,15 @@ public class UnlockPhoneView extends viewabstract {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(getWidth(), getHeight()/2, 800, yellowPaint);
-        canvas.drawCircle(getWidth(), getHeight()/2, 600, bluePaint);
+        canvas.drawCircle(getWidth()/2, getHeight(), getWidth()/2, yellowPaint);
+        canvas.drawCircle(getWidth()/2, getHeight(), (getWidth()/2)-200, bluePaint);
         canvas.drawRect(getWidth()-125,(getHeight()/2)-400,getWidth(),(getHeight()/2)+400,blackPaint);
         canvas.drawCircle(x,y,100,redPaint);
         canvas.save();
         //take normal (x,y) -> (-y,x)
-        canvas.rotate(90f*3, 50f, 50f);
-        canvas.drawText("Start Here",-(getHeight()-300),(getWidth()-100), whitePaint);
-        canvas.drawText("Use The Lock To Trace The Yellow Arc "+count,-getHeight()/2,300, whitePaint);
-        canvas.drawText("End Here",-100,getWidth()-100, whitePaint);
+        canvas.drawText("Start Here",300,(getHeight()-800), whitePaint);
+        canvas.drawText("Use The Lock To Trace The Yellow Arc "+count,(getWidth()/2),getHeight()/2, whitePaintCenter);
+        canvas.drawText("End Here",getWidth()-300,(getHeight()-800), whitePaint);
         canvas.restore();
     }
 
@@ -57,6 +56,11 @@ public class UnlockPhoneView extends viewabstract {
         whitePaint = new Paint();
         whitePaint.setColor(Color.WHITE);
         whitePaint.setTextSize(60);
+        whitePaintCenter = new Paint();
+        whitePaintCenter.setColor(Color.WHITE);
+        whitePaintCenter.setTextSize(60);
+        whitePaintCenter.setTextAlign(Paint.Align.CENTER);
+
         blackPaint=new Paint();
         blackPaint.setColor(Color.BLACK);
         setBackgroundColor(Color.BLACK);

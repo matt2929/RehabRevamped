@@ -2,13 +2,11 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 import android.text.format.Time;
-import android.util.Log;
 
 
 import com.example.matthew.rehabrevamped.Utilities.GripAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
-import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
 
 import java.util.ArrayList;
 
@@ -29,14 +27,13 @@ public class PickUpCount implements WorkoutSession {
     double collisionNumber = 0;
     float a = 0;
     boolean imOnLowerSurface = true;
-    long StartTime= System.currentTimeMillis();
+    long StartTime = System.currentTimeMillis();
     ArrayList<String> stringsIHaveSaid = new ArrayList<>();
     double totaldatas = 0;
-    boolean startedWork=false;
+    boolean startedWork = false;
     GripAnalysis gripAnalysis = new GripAnalysis();
     boolean inMotion = false;
     boolean hasStarted = false;
-    WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
     long startOfWorkoutForGrade = System.currentTimeMillis();
 
     //Jerk Stuff
@@ -49,41 +46,33 @@ public class PickUpCount implements WorkoutSession {
 
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
 
-        if (Math.abs(StartTime - System.currentTimeMillis()) > 10000) {
-            if (startedWork == false) {
-                startedWork = true;
-                whatToSay="Please Begin";
-                shouldITalk=true;
-                Log.e("said","it");
-            } else {
-                jerkScoreAnalysis.jerkAdd(accX,accY,accZ);
-                workoutShakeTrack.analyseData(accX, accY, accZ);
-                float differenceVAL = Math.abs(accY - countPickupLastVal);
-                a = differenceVAL;
-                countPickupLastVal = accY;
-                sampleAverage.addSmoothAverage(differenceVAL);
-                Time nowTime = new Time();
-                nowTime.setToNow();
-                holdAccuracy(accX, accY, accZ);
-                long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
-                if (sampleAverage.getMedianAverage() < .22 && differenceTime > 2000 && inMotion) {
-                    startTime.setToNow();
-                    shouldITalk = true;
-                    pickupCount++;
-                    whatToSay = "" + pickupCount;
-                    jerkScoreAnalysis.jerkCompute(Math.abs(System.currentTimeMillis()-jerkStartTime));
-                    jerkStartTime= System.currentTimeMillis();
-                    inMotion = false;
-                    imOnLowerSurface = !imOnLowerSurface;
-                } else if (sampleAverage.getMedianAverage() > .5 && !inMotion) {
-                    inMotion = true;
-                }
-            }}
+        jerkScoreAnalysis.jerkAdd(accX, accY, accZ);
+        float differenceVAL = Math.abs(accY - countPickupLastVal);
+        a = differenceVAL;
+        countPickupLastVal = accY;
+        sampleAverage.addSmoothAverage(differenceVAL);
+        Time nowTime = new Time();
+        nowTime.setToNow();
+        holdAccuracy(accX, accY, accZ);
+        long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
+        if (sampleAverage.getMedianAverage() < .22 && differenceTime > 2000 && inMotion) {
+            startTime.setToNow();
+            shouldITalk = true;
+            pickupCount++;
+            whatToSay = "" + pickupCount;
+            jerkScoreAnalysis.jerkCompute(Math.abs(System.currentTimeMillis() - jerkStartTime));
+            jerkStartTime = System.currentTimeMillis();
+            inMotion = false;
+            imOnLowerSurface = !imOnLowerSurface;
+        } else if (sampleAverage.getMedianAverage() > .5 && !inMotion) {
+            inMotion = true;
+        }
     }
+
 
     @Override
     public int getGrade() {
-       return jerkScoreAnalysis.getJerkAverage().intValue();
+        return jerkScoreAnalysis.getJerkAverage().intValue();
     }
 
     @Override
@@ -111,7 +100,6 @@ public class PickUpCount implements WorkoutSession {
 
         return "\n\n\nPut away " + pickupCount + " time(s).";
     }
-
 
 
     @Override
@@ -148,7 +136,7 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public String stringOut() {
-        return "Pick Up Count: "+pickupCount;
+        return "Pick Up Count: " + pickupCount;
     }
 
     @Override
@@ -163,7 +151,7 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table and when I count pick up the cup again. Start when I say please begin";
+        return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table and when I count pick up the cup again.";
     }
 
 }

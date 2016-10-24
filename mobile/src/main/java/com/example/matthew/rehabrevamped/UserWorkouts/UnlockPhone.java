@@ -2,6 +2,9 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.util.Log;
+
+import com.example.matthew.rehabrevamped.Activities.WorkoutSessionActivity;
 
 /**
  * Created by Matthew on 9/25/2016.
@@ -14,31 +17,52 @@ public class UnlockPhone implements WorkoutSession {
     float startX = 0, startY = 0;
     boolean peaked = false;
     boolean returnedToStart = false;
-    int count=0;
+    int count = 0;
+    int countChecks = 0;
+    boolean[] checkpointsCheck = new boolean[11];
+    float[] checkpointsNum = new float[11];
+    boolean firstTime = true;
+
 
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
-        if (firstSpot == false) {
-            if (x != -1) {
-                startX = x;
-                startY = y;
-                firstSpot = true;
+        if (firstTime) {
+            float width = WorkoutSessionActivity.width;
+            for (int i = 0; i < checkpointsNum.length - 1; i++) {
+                checkpointsCheck[i] = false;
+                checkpointsNum[i] = (width * (i / 10f));
+                Log.e("checkpoint", "" + checkpointsNum[i]);
+
+            }
+            if (WorkoutSessionActivity.width != 0) {
+                firstTime = false;
             }
         } else {
-            if (Math.abs(y - startY) > 600) {
-                peaked = true;
+
+            for (int i = 0; i < checkpointsNum.length - 1; i++) {
+                if (x < checkpointsNum[i + 1] && x > checkpointsNum[i]) {
+                     if (checkpointsCheck[i] == false) {
+                         Log.e("it happened","i:"+i+": "+checkpointsCheck[i]);
+                         checkpointsCheck[i] = true;
+
+                         countChecks++;
+                    }
+                   }
             }
-            if (peaked && (x >= startX)) {
+            if (countChecks == 8) {
                 count++;
-                firstSpot=false;
-                peaked=false;
+                countChecks = 0;
+                for (int i = 0; i < checkpointsNum.length; i++) {
+                    checkpointsCheck[i] = false;
+                }
             }
+              Log.e("count: ", ""+countChecks+" x:"+x+" y:"+y);
         }
     }
 
     @Override
     public boolean workoutFinished() {
-        return count==10;
+        return count == 5;
     }
 
     @Override
@@ -73,7 +97,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return null;
+        return "Drag the dot from one side to the other.";
     }
 
     @Override
@@ -88,7 +112,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String stringOut() {
-        return x+","+y+",count: "+count;
+        return x + "," + y + ",count: " + count;
     }
 
     @Override

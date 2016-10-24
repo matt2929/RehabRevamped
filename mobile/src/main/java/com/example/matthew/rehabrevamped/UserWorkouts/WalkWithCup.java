@@ -2,9 +2,6 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 
-import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
-import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
-
 /**
  * Created by Matthew on 7/12/2016.
  */
@@ -26,33 +23,32 @@ public class WalkWithCup implements WorkoutSession {
     long startTime = System.currentTimeMillis();
     boolean haveIStarted = false;
     int total = 0;
-    String whatShouldISay="";
-WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
+    String whatShouldISay = "";
+
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
-        workoutShakeTrack.analyseData(accX, accY, accZ);
         float accT = (float) Math.pow((Math.pow(accX, 2) + Math.pow(accY, 2) + Math.pow(accZ, 2)), .5);
         float slope = (accT - lastValue);
         long currentTime = System.currentTimeMillis();
         if ((currentTime - startTime) > 8000) {
-            if(!haveIStarted){
-                haveIStarted=true;
-                shouldItalk=true;
-                whatShouldISay="Start Walking";
+            if (!haveIStarted) {
+                haveIStarted = true;
+                shouldItalk = true;
+                whatShouldISay = "Start Walking";
             }
             if (lastSlope > 0 && slope < 0 && lastValue >= 10 && lastValue > 10) {
                 totalSteps++;
             }
             lastSlope = slope;
             lastValue = accT;
-        }else{
+        } else {
 
         }
     }
 
     @Override
     public boolean workoutFinished() {
-        if(totalSteps==100){
+        if (totalSteps == 100) {
             return true;
         }
         return false;
@@ -97,8 +93,8 @@ WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
 
     @Override
     public String whatToSay() {
-        shouldItalk=false;
-         return whatShouldISay;
+        shouldItalk = false;
+        return whatShouldISay;
 
     }
 
@@ -111,7 +107,6 @@ WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
     public String getWorkoutName() {
         return "Walk With Cup";
     }
-
 
 
     @Override

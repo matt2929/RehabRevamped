@@ -2,11 +2,11 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
-import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
 
 /**
  * Created by Matthew on 8/10/2016.
@@ -20,34 +20,22 @@ public class PourCup implements WorkoutSession {
     boolean mediaChecked = false;
     boolean startedWork = false;
     boolean outOfSpace = false;
-    int startGoal=13500;
     double AccX = 0, AccY = 0;
-    WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
     boolean shouldISpeak = false;
     String whatToSay = "";
-    int grade = 100;
-
+    JerkScoreAnalysis jerkScoreAnalysis= new JerkScoreAnalysis(5);
+    long startTime = System.currentTimeMillis();
     @Override
     public int getGrade() {
-        if (grade <= 0) {
-            return 0;
-        } else {
-            return grade;
-        }
+        long time=Math.abs(startTime- System.currentTimeMillis());
+        jerkScoreAnalysis.jerkCompute(time/10);
+        return jerkScoreAnalysis.getJerkAverage().intValue();
     }
 
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
-        //Log.e("said",""+Math.abs(StartTime - System.currentTimeMillis()));
+                jerkScoreAnalysis.jerkAdd(accX,accY,accZ);
 
-        if (Math.abs(StartTime - System.currentTimeMillis()) > startGoal) {
-            if (startedWork == false) {
-                startedWork = true;
-                whatToSay="Please Begin Pouring";
-                shouldISpeak=true;
-                Log.e("said","it");
-            } else {
-                workoutShakeTrack.analyseData(accX, accY, accZ);
                 AccX = accX;
                 AccY = accY;
                 //has mediaplayer been instantiated
@@ -96,8 +84,6 @@ public class PourCup implements WorkoutSession {
                                     outOfSpace = false;
                                     pitcher[cupSearch] = pitcher[cupSearch] + 1;
                                     whatToSay = "Pouring too quick!";
-                                    grade = grade - 5;
-                                    Log.e("Grade", grade + "%");
                                     shouldISpeak = true;
                                     mediaPlayer.pause();
                                     outOfSpace = true;
@@ -130,8 +116,6 @@ public class PourCup implements WorkoutSession {
                 }
 
             }
-        }
-    }
 
     @Override
     public boolean workoutFinished() {
@@ -201,6 +185,6 @@ public class PourCup implements WorkoutSession {
     @Override
     public String sayHowToHoldCup() {
         long StartTime = System.currentTimeMillis();
-        return "In this workout you will hold the cup up and pretend to pour out water in front of you. Do not pour too quick or to slow. Please start when I say please begin pouring.";
+        return "In this workout you will hold the cup up and pretend to pour out water in front of you. Do not pour too quick or to slow.";
     }
 }

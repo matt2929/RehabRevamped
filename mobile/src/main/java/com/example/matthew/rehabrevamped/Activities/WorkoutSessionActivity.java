@@ -11,6 +11,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -35,10 +36,12 @@ import com.google.android.gms.wearable.Wearable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Handler;
 
-public class WorkoutSessionActivity extends Activity implements SensorEventListener, TextToSpeech.OnInitListener {
+public class WorkoutSessionActivity extends Activity implements SensorEventListener, TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener {
     SaveData saveData;
     GoogleApiClient mGoogleApiClient;
     private Node mNode;
@@ -48,21 +51,24 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private float gyroX = 0, gyroY = 0, gyroZ = 0;
     private Sensor mAcc, mGyro, mStep;
     AudioManager mgr = null;
+    public static float width=0, height=0;
     private WorkoutSession currentWorkout;
-    public boolean workoutInProgress = true;
+    public boolean workoutInProgress = false;
     private int sendWorkoutStringToWatchCount = 0, getSendWorkoutStringToWatchMax = 30;
     private float lastValue = 10;
     private SampleAverage sampleAverage = new SampleAverage();
     TextToSpeech tts;
     String saveString = "";
+    String begin="Ready,Begin";
+    float delayToStart= 3000;
     viewabstract currentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentView = WorkoutSelectionScreen.CurrentWorkoutView;
-
-        setContentView((RelativeLayout) currentView);
+        currentView.removeAllViews();
+        setContentView(currentView);
         currentView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -70,11 +76,30 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 return true;
             }
         });
-
+        width=getWindow().getDecorView().getWidth();
+        height=getWindow().getDecorView().getHeight();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 10, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         tts = new TextToSpeech(this, this);
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                if(utteranceId.equals("Begin")){
+                    workoutInProgress=true;
+                }
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+
+            }
+        });
         mSensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
         List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         currentWorkout = WorkoutSelectionScreen.CurrentWorkout;
@@ -169,6 +194,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor;
+        width=getWindow().getDecorView().getWidth();
+        height=getWindow().getDecorView().getHeight();
         if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             accX = event.values[0];
             accY = event.values[1];
@@ -183,10 +210,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
         }
         if (workoutInProgress) {
-
             Calendar cal = Calendar.getInstance();
-
-
             sendWorkoutStringToWatchCount++;
             //Send Textual information to watch
             if (sendWorkoutStringToWatchCount == getSendWorkoutStringToWatchMax) {
@@ -298,6 +322,14 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             Log.e("TTS", "Initilization Failed");
         }
         tts.speak(currentWorkout.sayHowToHoldCup(), TextToSpeech.QUEUE_ADD, null);
+        HashMap<String, String> beginCheck = new HashMap<String, String>();
+        beginCheck.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));
+        beginCheck.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "Begin");
+        tts.speak(begin,TextToSpeech.QUEUE_ADD,beginCheck);
     }
 
+    @Override
+    public void onUtteranceCompleted(String utteranceId) {
+
+    }
 }

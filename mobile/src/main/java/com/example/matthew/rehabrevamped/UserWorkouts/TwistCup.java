@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.example.matthew.rehabrevamped.Utilities.GripAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
-import com.example.matthew.rehabrevamped.Utilities.WorkoutShakeTrack;
 
 /**
  * Created by Matthew on 7/27/2016.
@@ -25,7 +24,6 @@ public class TwistCup implements WorkoutSession {
     long startSpeak = System.currentTimeMillis();
     float lastGyroZ = 0;
     GripAnalysis gripAnalysis = new GripAnalysis();
-    WorkoutShakeTrack workoutShakeTrack = new WorkoutShakeTrack();
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(1);
 
     public TwistCup() {
@@ -35,13 +33,6 @@ public class TwistCup implements WorkoutSession {
 
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
-        Log.e("wut",""+(Math.abs(startSpeak - System.currentTimeMillis())));
-        if ((Math.abs(startSpeak - System.currentTimeMillis()) > 10000)) {
-            if (iAnnouced == false) {
-                shouldITalk = true;
-                whatToSay = "Begin";
-                iAnnouced = true;
-            } else {
                 jerkScoreAnalysis.jerkAdd(accX, accY, accZ);
      //           workoutShakeTrack.analyseData(accX, accY, accZ);
                 float differenceVAL = gravX - lastGyroZ;
@@ -58,8 +49,7 @@ public class TwistCup implements WorkoutSession {
                 }
                 lastDifference = differenceVAL;
             }
-        }
-    }
+
 
     @Override
     public boolean workoutFinished() {
