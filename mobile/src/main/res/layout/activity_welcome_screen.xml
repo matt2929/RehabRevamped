@@ -19,13 +19,27 @@
         android:id="@+id/welcomescreencontinue" />
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:text="Rehab App Revamped"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:layout_marginTop="40dp"
+        android:fontFamily="cursive"
+        android:textSize="36sp"
+        android:textColor="?android:attr/colorMultiSelectHighlight" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text='Please run the "Rehab Revamped" app on the watch '
+        android:text="Be sure your running the app on your watch if you choose to use it"
+        android:gravity="center"
         android:id="@+id/WelcomeScreenInfo"
         android:textSize="18sp"
-        android:textAlignment="center"
+        android:textStyle="normal|italic"
         android:layout_above="@+id/welcomescreencontinue"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="41dp" />
+        android:layout_marginStart="12dp" />
 </RelativeLayout>

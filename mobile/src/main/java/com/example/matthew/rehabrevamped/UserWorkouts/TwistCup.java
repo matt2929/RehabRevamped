@@ -32,6 +32,10 @@ public class TwistCup implements WorkoutSession {
 
 
     @Override
+    public float[][] getHoldParamaters() {
+        return new float[][]{{0,0,0,0,0,0},{0,0,0,0,0,0}};
+    }
+    @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
                 jerkScoreAnalysis.jerkAdd(accX, accY, accZ);
      //           workoutShakeTrack.analyseData(accX, accY, accZ);

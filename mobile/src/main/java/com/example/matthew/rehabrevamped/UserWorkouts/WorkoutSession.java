@@ -17,12 +17,14 @@ public interface WorkoutSession {
     public boolean shouldISaySomething();
 
    public float getJerkScore();
+
     public String whatToSay();
 
     public String saveData();
 
     public String getWorkoutName();
 
+    public float[][] getHoldParamaters();
 
     public String sayHowToHoldCup();
 

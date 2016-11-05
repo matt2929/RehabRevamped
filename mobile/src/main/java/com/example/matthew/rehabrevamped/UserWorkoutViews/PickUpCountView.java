@@ -16,6 +16,7 @@ public class PickUpCountView extends viewabstract {
 
     Paint whitePaint;
     String displayS="";
+    float gravX=0,gravY=0,gravZ=0;
     public PickUpCountView(Context context) {
         super(context);
         viewinit();
@@ -42,6 +43,13 @@ public class PickUpCountView extends viewabstract {
         setBackgroundColor(Color.BLACK);
         whitePaint.setTextSize(60);
         whitePaint.setTextAlign(Paint.Align.CENTER);
+    }
+
+    @Override
+    public void gimmiGrav(Float x, float y, float z) {
+        gravX=x;
+        gravY=y;
+        gravZ=z;
     }
 
     @Override

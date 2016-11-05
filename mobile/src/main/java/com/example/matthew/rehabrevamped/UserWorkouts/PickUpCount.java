@@ -150,6 +150,13 @@ public class PickUpCount implements WorkoutSession {
     }
 
     @Override
+    public float[][] getHoldParamaters() {
+        return new float[][]{{0.7f,.3f,-5f,9.5f ,10f ,4.5f},{1f,10f ,-7.5f ,1.5f}};
+    }
+
+
+
+    @Override
     public String sayHowToHoldCup() {
         return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table and when I count pick up the cup again.";
     }

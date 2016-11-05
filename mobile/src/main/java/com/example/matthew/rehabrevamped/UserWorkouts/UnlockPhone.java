@@ -5,6 +5,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.example.matthew.rehabrevamped.Activities.WorkoutSessionActivity;
+import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 
 /**
  * Created by Matthew on 9/25/2016.
@@ -22,8 +23,8 @@ public class UnlockPhone implements WorkoutSession {
     boolean[] checkpointsCheck = new boolean[11];
     float[] checkpointsNum = new float[11];
     boolean firstTime = true;
-
-
+    JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(5);
+    long startTime = System.currentTimeMillis();
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
         if (firstTime) {
@@ -38,7 +39,7 @@ public class UnlockPhone implements WorkoutSession {
                 firstTime = false;
             }
         } else {
-
+            jerkScoreAnalysis.jerkAdd(x,y,1);
             for (int i = 0; i < checkpointsNum.length - 1; i++) {
                 if (x < checkpointsNum[i + 1] && x > checkpointsNum[i]) {
                      if (checkpointsCheck[i] == false) {
@@ -71,13 +72,19 @@ public class UnlockPhone implements WorkoutSession {
     }
 
     @Override
+    public float[][] getHoldParamaters() {
+        return new float[][]{{0,0,0,0,0,0},{0,0,0,0,0,0}};
+    }
+
+    @Override
     public boolean shouldISaySomething() {
         return false;
     }
 
     @Override
     public float getJerkScore() {
-        return 0f;
+        jerkScoreAnalysis.jerkCompute(Math.abs(((startTime- System.currentTimeMillis())/10)));
+        return jerkScoreAnalysis.getJerkAverage();
     }
 
     @Override

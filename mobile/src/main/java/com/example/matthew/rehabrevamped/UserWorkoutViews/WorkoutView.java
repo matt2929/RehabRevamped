@@ -10,4 +10,6 @@ public  interface WorkoutView {
     public void dataInput(float f);
 
     public void stringInput(String s);
+
+    public void gimmiGrav(Float x,float y,float z);
 }

@@ -21,6 +21,11 @@ public class WalkWithCupView extends viewabstract{
         super(context, attrs, defStyleAttr);
     }
 
+    @Override
+    public void gimmiGrav(Float x, float y, float z) {
+
+    }
+
     public WalkWithCupView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

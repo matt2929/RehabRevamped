@@ -49,9 +49,10 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private float walkCount = 0;
     private float accX = 0, accY = 0, accZ = 0;
     private float gyroX = 0, gyroY = 0, gyroZ = 0;
-    private Sensor mAcc, mGyro, mStep;
+    private float gravX = 0, gravY = 0, gravZ = 0;
+    private Sensor mAcc, mGyro, mStep,mGrav;
     AudioManager mgr = null;
-    public static float width=0, height=0;
+    public static float width = 0, height = 0;
     private WorkoutSession currentWorkout;
     public boolean workoutInProgress = false;
     private int sendWorkoutStringToWatchCount = 0, getSendWorkoutStringToWatchMax = 30;
@@ -59,9 +60,11 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private SampleAverage sampleAverage = new SampleAverage();
     TextToSpeech tts;
     String saveString = "";
-    String begin="Ready,Begin";
-    float delayToStart= 3000;
+    String begin = "Ready,Begin";
+    float delayToStart = 3000;
+    boolean sent = false;
     viewabstract currentView;
+    boolean noConformation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +79,9 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 return true;
             }
         });
-        width=getWindow().getDecorView().getWidth();
-        height=getWindow().getDecorView().getHeight();
+
+        width = getWindow().getDecorView().getWidth();
+        height = getWindow().getDecorView().getHeight();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 10, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
@@ -90,8 +94,9 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
             @Override
             public void onDone(String utteranceId) {
-                if(utteranceId.equals("Begin")){
-                    workoutInProgress=true;
+                if (utteranceId.equals("Begin")) {
+                    workoutInProgress = true;
+
                 }
             }
 
@@ -103,25 +108,23 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         mSensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
         List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         currentWorkout = WorkoutSelectionScreen.CurrentWorkout;
-
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
             mAcc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mSensorManager.registerListener(this, mAcc, SensorManager.SENSOR_DELAY_NORMAL);
-        } else {
         }
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
             mGyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
             mSensorManager.registerListener(this, mGyro, Sensor.TYPE_GYROSCOPE);
-        } else {
-
         }
 
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             mStep = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             mSensorManager.registerListener(this, mStep, Sensor.TYPE_STEP_COUNTER);
-        } else {
-
+        }
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
+            mGrav = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+            mSensorManager.registerListener(this, mGrav, Sensor.TYPE_GRAVITY);
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -136,6 +139,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 @Override
                 public void onConnected(Bundle bundle) {
 
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -148,6 +152,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                         }
                     }).start();
                     Wearable.MessageApi.addListener(mGoogleApiClient, mMessageListener);
+
                 }
 
                 @Override
@@ -164,11 +169,19 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 ByteBuffer byteBuffer = ByteBuffer.wrap(messageEvent.getData());
                 messageEvent.getData();
                 String dataRaw = new String(byteBuffer.array());
-                /*if (dataRaw.equals("")) {
+                if (dataRaw.equals("Bad Data")) {
+                    Log.e("LOUD AND CLEAR", "The phone detected bad data");
+                    Toast.makeText(getApplicationContext(), "Bad Hold", Toast.LENGTH_SHORT).show();
+                }
+                if (dataRaw.equals("Conformation")) {
+                    noConformation = false;
+                }
+                if (dataRaw.equals("Error")) {
 
-                    }*/
+                    Toast.makeText(getApplicationContext(),"Bad Hold",Toast.LENGTH_SHORT).cancel();
+                    Toast.makeText(getApplicationContext(),"Bad Hold",Toast.LENGTH_SHORT).show();
+                }
             }
-
         }
     };
 
@@ -193,9 +206,25 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if (noConformation == true) {
+            int left = 0;
+            if (WorkoutSelectionScreen.isLeftHand) {
+
+            } else {
+                left = 1;
+            }
+            sendAMessageToWatch(
+                    "Start," + currentWorkout.getHoldParamaters()[left][0]
+                            + "," + currentWorkout.getHoldParamaters()[left][1]
+                            + "," + currentWorkout.getHoldParamaters()[left][2]
+                            + "," + currentWorkout.getHoldParamaters()[left][3]
+                            + "," + currentWorkout.getHoldParamaters()[left][4]
+                            + "," + currentWorkout.getHoldParamaters()[left][5]
+            );
+        }
         Sensor sensor = event.sensor;
-        width=getWindow().getDecorView().getWidth();
-        height=getWindow().getDecorView().getHeight();
+        width = getWindow().getDecorView().getWidth();
+        height = getWindow().getDecorView().getHeight();
         if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             accX = event.values[0];
             accY = event.values[1];
@@ -208,6 +237,10 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
             walkCount = event.values[0];
 
+        }else if (sensor.getType() == Sensor.TYPE_GRAVITY){
+            gravX=event.values[0];
+            gravY=event.values[1];
+            gravZ=event.values[2];
         }
         if (workoutInProgress) {
             Calendar cal = Calendar.getInstance();
@@ -266,22 +299,26 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 saveString = "";
                 //   sendAMessageToWatch(MessagingValues.WORKOUTOVER);
                 workoutInProgress = false;
+                sendAMessageToWatch("Reset");
                 Intent intent = new Intent(getApplicationContext(), WorkoutSelectionScreen.class);
                 startActivity(intent);
             }
         }
 
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
         MultiDex.install(this);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mAcc, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mGyro, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mGrav, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -325,7 +362,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         HashMap<String, String> beginCheck = new HashMap<String, String>();
         beginCheck.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));
         beginCheck.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "Begin");
-        tts.speak(begin,TextToSpeech.QUEUE_ADD,beginCheck);
+        tts.speak(begin, TextToSpeech.QUEUE_ADD, beginCheck);
+
     }
 
     @Override

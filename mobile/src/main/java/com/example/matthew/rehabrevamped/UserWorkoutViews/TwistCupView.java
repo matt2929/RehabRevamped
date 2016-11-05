@@ -26,6 +26,11 @@ public class TwistCupView extends viewabstract {
     }
 
     @Override
+    public void gimmiGrav(Float x, float y, float z) {
+
+    }
+
+    @Override
     public void dataInput(float f) {
 
     }

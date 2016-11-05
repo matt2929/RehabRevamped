@@ -20,6 +20,8 @@ public class PourCup implements WorkoutSession {
     boolean mediaChecked = false;
     boolean startedWork = false;
     boolean outOfSpace = false;
+    float GravX=-1;
+    float GravY=-1;
     double AccX = 0, AccY = 0;
     boolean shouldISpeak = false;
     String whatToSay = "";
@@ -35,7 +37,8 @@ public class PourCup implements WorkoutSession {
     @Override
     public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
                 jerkScoreAnalysis.jerkAdd(accX,accY,accZ);
-
+                GravX=accX;
+                GravY=accY;
                 AccX = accX;
                 AccY = accY;
                 //has mediaplayer been instantiated
@@ -83,7 +86,7 @@ public class PourCup implements WorkoutSession {
                                     outOfSpace = true;
                                     outOfSpace = false;
                                     pitcher[cupSearch] = pitcher[cupSearch] + 1;
-                                    whatToSay = "Pouring too quick!";
+                                    whatToSay = "Pouring too quick! Beer is everywhere!";
                                     shouldISpeak = true;
                                     mediaPlayer.pause();
                                     outOfSpace = true;
@@ -135,7 +138,7 @@ public class PourCup implements WorkoutSession {
 
     @Override
     public String stringOut() {
-        return null;
+        return GravX+","+GravY;
     }
 
     @Override
@@ -173,6 +176,11 @@ public class PourCup implements WorkoutSession {
     @Override
     public String saveData() {
         return null;
+    }
+
+    @Override
+    public float[][] getHoldParamaters() {
+        return new float[][]{{0,0,0,0,0,0},{0,0,0,0,0,0}};
     }
 
     @Override

@@ -87,6 +87,10 @@ public class WalkWithCup implements WorkoutSession {
     }
 
     @Override
+    public float[][] getHoldParamaters() {
+        return new float[][]{{0,0,0,0,0,0},{0,0,0,0,0,0}};
+    }
+    @Override
     public float getJerkScore() {
         return 0f;
     }

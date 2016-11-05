@@ -26,6 +26,11 @@ public abstract class viewabstract extends RelativeLayout implements WorkoutView
     }
 
     @Override
+    public void gimmiGrav(Float x, float y, float z) {
+
+    }
+
+    @Override
     public void dataInput(float f) {
     }
 

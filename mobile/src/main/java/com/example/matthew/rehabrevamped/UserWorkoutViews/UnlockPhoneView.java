@@ -55,10 +55,10 @@ public class UnlockPhoneView extends viewabstract {
         yellowPaint.setColor(Color.YELLOW);
         whitePaint = new Paint();
         whitePaint.setColor(Color.WHITE);
-        whitePaint.setTextSize(60);
+        whitePaint.setTextSize(30);
         whitePaintCenter = new Paint();
         whitePaintCenter.setColor(Color.WHITE);
-        whitePaintCenter.setTextSize(60);
+        whitePaintCenter.setTextSize(40);
         whitePaintCenter.setTextAlign(Paint.Align.CENTER);
 
         blackPaint=new Paint();
@@ -70,6 +70,11 @@ whitePaint.setTextAlign(Paint.Align.CENTER);
     public UnlockPhoneView(Context context) {
         super(context);
         initView();
+    }
+
+    @Override
+    public void gimmiGrav(Float x, float y, float z) {
+
     }
 
     public UnlockPhoneView(Context context, AttributeSet attrs) {
