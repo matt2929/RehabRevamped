@@ -20,13 +20,15 @@ import android.widget.TextView;
 
 import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.WorkoutHistoricalData;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class HistoryGraph extends Activity {
 
-    CustomViewGraph graphDataView;
     ListView listView;
     ArrayList<String> stringArrlist = new ArrayList<String>();
     ArrayList<Float> intArrlist = new ArrayList<Float>();
@@ -34,11 +36,8 @@ public class HistoryGraph extends Activity {
     ArrayList<WorkoutHistoricalData.WorkoutSession> temp = new ArrayList<WorkoutHistoricalData.WorkoutSession>();
     TextView textView;
     CheckBox checkBox;
-    Button timeDurationButton;
-    int biggest = Integer.MIN_VALUE;
-    int smallest = Integer.MAX_VALUE;
-    int currentDuration = 0;
-    int currentShakeType = 0;
+    GraphView graph;
+    LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +51,17 @@ public class HistoryGraph extends Activity {
         temp = new ArrayList<>(sessions);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_history_graph);
-        graphDataView = (CustomViewGraph) findViewById(R.id.GraphData);
-        graphDataView.setVisibility(View.VISIBLE);
-        graphDataView.setBackgroundColor(Color.rgb(83,146,196));
+        graph = (GraphView) findViewById(R.id.graph);
         listView = (ListView) findViewById(R.id.datalist);
         textView = (TextView) findViewById(R.id.pointInfo);
         checkBox = (CheckBox) findViewById(R.id.line);
-        timeDurationButton = (Button) findViewById(R.id.setDataDuration);
         setupViews();
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                graphDataView.dotOrLine(b);
+
             }
         });
-        timeDurationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeDuration();
-            }
-        });
-        graphDataView.setValues(intArrlist);
         listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, stringArrlist));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,46 +69,38 @@ public class HistoryGraph extends Activity {
                 if (i == 0) {
 
                 } else {
-                    graphDataView.selectHighlightedData((intArrlist.size() - i) - 1);
-                    textView.setText("The selected workout had a total of " + (intArrlist.get(i-1)).intValue() + " shakes.");
+                    textView.setText("The selected workout had a total of " + (intArrlist.get(i - 1)).intValue() + " shakes.");
                     textView.setTextColor(Color.WHITE);
-                    textView.setShadowLayer(20,5,5,Color.BLACK);
+                    textView.setShadowLayer(20, 5, 5, Color.BLACK);
                 }
             }
         });
     }
 
     public void setupViews() {
-
+        series = new LineGraphSeries<>();
+        DataPoint[] dataPoint = new DataPoint[sessions.size()];
         if (sessions.size() == 0) {
             textView.setText("There is no data within these parameters.");
         } else {
             textView.setText("");
-            graphDataView.selectHighlightedData(-1);
             //
             stringArrlist.clear();
             intArrlist.clear();
             float start = 0;
-            int biggest = Integer.MIN_VALUE;
-            int smallest = Integer.MAX_VALUE;
-            stringArrlist.add("All \'"+sessions.get(0).getWorkoutName()+ "\' Activities:");
+            stringArrlist.add("All \'" + sessions.get(0).getWorkoutName() + "\' Activities:");
 
             for (int i = 0; i < sessions.size(); i++) {
                 WorkoutHistoricalData.WorkoutSession s = sessions.get(i);
 
                 start = (float) sessions.get(i).getJerkScore();
-                stringArrlist.add((s.get_Cal().get(Calendar.MONTH) + 1) + "/" + s.get_Cal().get(Calendar.DAY_OF_MONTH)+ "/" + s.get_Cal().get(Calendar.YEAR)
+                stringArrlist.add((s.get_Cal().get(Calendar.MONTH) + 1) + "/" + s.get_Cal().get(Calendar.DAY_OF_MONTH) + "/" + s.get_Cal().get(Calendar.YEAR)
                         + "\nTime: " + s.get_Cal().get(Calendar.HOUR_OF_DAY) + ":" + s.get_Cal().get(Calendar.MINUTE) + ":" + s.get_Cal().get(Calendar.SECOND) + "\nShakes: " + start + "\nHand: " + s.isLeftHand());
                 intArrlist.add((float) start);
-                if (start + .5 > biggest) {
-                    biggest = (int) start;
-                }
-                if (start - .5 < smallest) {
-                    smallest = (int) start;
-                }
+                dataPoint[i]=new DataPoint(i,start);
             }
-            graphDataView.setValues(intArrlist);
-            graphDataView.invalidate();
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoint);
+            graph.addSeries(series);
             listView.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_activated_1, stringArrlist) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -140,57 +121,12 @@ public class HistoryGraph extends Activity {
             listView.invalidate();
         }
     }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
         MultiDex.install(this);
     }
-    public void changeDuration() {
-        sessions = new ArrayList<WorkoutHistoricalData.WorkoutSession>();
 
-        switch (currentDuration) {
-            case 0:
-                for (int i = 0; i < temp.size(); i++) {
-                    WorkoutHistoricalData.WorkoutSession ws = temp.get(i);
-                    Calendar cal = Calendar.getInstance();
-                    if (ws.get_Cal().get(Calendar.YEAR) == cal.get(Calendar.YEAR)) {
-                        sessions.add(ws);
-                    }
-                }
-                timeDurationButton.setText("Duration\nYear");
-                currentDuration = 1;
-                break;
-            case 1:
-                for (int i = 0; i < temp.size(); i++) {
-                    WorkoutHistoricalData.WorkoutSession ws = temp.get(i);
-                    Calendar cal = Calendar.getInstance();
-                    if (ws.get_Cal().get(Calendar.MONTH) == cal.get(Calendar.MONTH) && ws.get_Cal().get(Calendar.YEAR) == cal.get(Calendar.YEAR)) {
-                        sessions.add(ws);
-                    }
-                }
-                timeDurationButton.setText("Duration\nMonth");
-                currentDuration = 2;
-                break;
-            case 2:
-                for (int i = 0; i < temp.size(); i++) {
-                    WorkoutHistoricalData.WorkoutSession ws = temp.get(i);
-                    Calendar cal = Calendar.getInstance();
-
-                    if (ws.get_Cal().get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH) && ws.get_Cal().get(Calendar.MONTH) == cal.get(Calendar.MONTH) && ws.get_Cal().get(Calendar.YEAR) == cal.get(Calendar.YEAR)) {
-                        sessions.add(ws);
-                    }
-
-                }
-                timeDurationButton.setText("Duration\nToday");
-                currentDuration = 3;
-                break;
-            case 3:
-                timeDurationButton.setText("Duration\nAll Time");
-                currentDuration = 0;
-                sessions = new ArrayList<WorkoutHistoricalData.WorkoutSession>(temp);
-                break;
-        }
-        setupViews();
-    }
 
 }
