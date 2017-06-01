@@ -52,7 +52,13 @@
         android:focusable="false"
         android:layout_below="@+id/pointInfo"
         android:layout_alignStart="@+id/pointInfo"
-        android:layout_above="@+id/textView2" />
+        android:layout_above="@+id/textView2" >
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/graph" />
+    </com.example.matthew.rehabrevamped.Activities.CustomViewGraph>
 
     <TextView
         android:layout_width="wrap_content"
