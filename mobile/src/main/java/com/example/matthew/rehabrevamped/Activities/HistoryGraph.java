@@ -23,6 +23,7 @@ import com.example.matthew.rehabrevamped.Utilities.WorkoutHistoricalData;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -101,6 +102,7 @@ public class HistoryGraph extends Activity {
             }
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoint);
             graph.addSeries(series);
+            addAverageLine(100);// temporarily 100, should be changed to the actual average jerk score
             listView.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_activated_1, stringArrlist) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -119,6 +121,23 @@ public class HistoryGraph extends Activity {
             listView.invalidate();
             ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
             listView.invalidate();
+        }
+    }
+
+    /**
+     * Creates a straight red dashed line at the y axis value given in the parameter,
+     * its meant to represent the Jerk Score at for the average human being.
+     * @param averageJerkScore
+     */
+    private void addAverageLine(int averageJerkScore) {
+        for(double i = 0;i<sessions.size();i=i+.05) {
+            LineGraphSeries<DataPoint> lineGraphSeries = new LineGraphSeries<DataPoint>();
+            lineGraphSeries.appendData(new DataPoint(i, averageJerkScore), true, 2);
+            i=i+.05;
+            lineGraphSeries.appendData(new DataPoint(i, averageJerkScore), true, 2);
+            lineGraphSeries.setThickness(3);
+            lineGraphSeries.setColor(Color.parseColor("#FF0000"));
+            graph.addSeries(lineGraphSeries);
         }
     }
 
