@@ -67,7 +67,7 @@ public class PourCupView extends viewabstract {
 
     @Override
     protected void onDraw(Canvas canvas) {
-Random random = new Random();
+        Random random = new Random();
         updateCount++;
         if(updateCount==updateMax){
             Bubbles.add(new bubbles(random.nextInt(getWidth()+10000)-5000,getHeight(),-15,15));

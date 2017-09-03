@@ -26,7 +26,7 @@ public class WalkWithCup implements WorkoutSession {
     String whatShouldISay = "";
 
     @Override
-    public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
+    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
         float accT = (float) Math.pow((Math.pow(accX, 2) + Math.pow(accY, 2) + Math.pow(accZ, 2)), .5);
         float slope = (accT - lastValue);
         long currentTime = System.currentTimeMillis();

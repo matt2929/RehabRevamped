@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RehabRevamped</string>
+    <string name="red_line">The red line represents the expected jerk score</string>
+    <string name="blue_line">The blue line represents the average jerk score</string>
 </resources>

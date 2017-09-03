@@ -26,7 +26,7 @@ public class UnlockPhone implements WorkoutSession {
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(5);
     long startTime = System.currentTimeMillis();
     @Override
-    public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
+    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
         if (firstTime) {
             float width = WorkoutSessionActivity.width;
             for (int i = 0; i < checkpointsNum.length - 1; i++) {
@@ -39,7 +39,7 @@ public class UnlockPhone implements WorkoutSession {
                 firstTime = false;
             }
         } else {
-            jerkScoreAnalysis.jerkAdd(x,y,1);
+            jerkScoreAnalysis.jerkAdd(x,y,1,accTime, gyroX, gyroY, gyroZ,gyroTime, magX, magY, magZ,magTime);
             for (int i = 0; i < checkpointsNum.length - 1; i++) {
                 if (x < checkpointsNum[i + 1] && x > checkpointsNum[i]) {
                      if (checkpointsCheck[i] == false) {

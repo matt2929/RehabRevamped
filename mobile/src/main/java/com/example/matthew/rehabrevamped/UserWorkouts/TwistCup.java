@@ -36,11 +36,11 @@ public class TwistCup implements WorkoutSession {
         return new float[][]{{0,0,0,0,0,0},{0,0,0,0,0,0}};
     }
     @Override
-    public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context) {
-                jerkScoreAnalysis.jerkAdd(accX, accY, accZ);
+    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
+                jerkScoreAnalysis.jerkAdd(accX, accY, accZ,accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
      //           workoutShakeTrack.analyseData(accX, accY, accZ);
-                float differenceVAL = gravX - lastGyroZ;
-                lastGyroZ = gravX;
+                float differenceVAL = gyroX - lastGyroZ;
+                lastGyroZ = gyroX;
                 Log.e("gyro: ", "" + differenceVAL);
                 long nowTime = System.currentTimeMillis();
                 //  holdAccuracy(accX, accY, accZ);

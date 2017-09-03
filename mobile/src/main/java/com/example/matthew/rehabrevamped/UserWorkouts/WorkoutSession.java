@@ -8,7 +8,7 @@ import android.content.Context;
 public interface WorkoutSession {
 
 
-    public void dataIn(float accX, float accY, float accZ, float gravX, float gravY, float gravZ, int walkingCount, Context context);
+    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount, float magX,float magY,float magZ, long magTime, Context context);
 
     public boolean workoutFinished();
 

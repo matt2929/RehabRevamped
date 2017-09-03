@@ -24,12 +24,10 @@ public class SaveData {
     public static String _fileName;
     File _file;
     int count = 0;
-    String _workoutName="";
+    String _name="";
 SampleAverage sampleAverage = new SampleAverage();
-    public SaveData(Context context, String workoutName) {
-        FileOutputStream outputStream;
-        FileInputStream inputStream;
-        _workoutName=workoutName;
+    public SaveData(Context context, String name,String fileType) {
+        _name=name;
         _context = context;
 
         Calendar cal = Calendar.getInstance();
@@ -42,10 +40,9 @@ SampleAverage sampleAverage = new SampleAverage();
         int minute = cal.get(Calendar.MINUTE);
         int second = cal.get(Calendar.SECOND);
 
-        _fileName = "RehabInfo_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s].csv";
+        _fileName = "RehabInfo_"+name+"_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s]."+fileType;
     }
-    public void saveData(String saveString) {
-
+    public void saveData(String saveString,File fileParent) {
             try {
 
                 String string = "";
@@ -55,29 +52,26 @@ SampleAverage sampleAverage = new SampleAverage();
                 outputStream = _context.openFileOutput(_fileName, Context.MODE_WORLD_READABLE);
                 outputStream.write(string.getBytes());
                 outputStream.close();
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), _fileName);
-                PrintWriter csvWriter;
+                File file = new File(fileParent, _fileName);
+                PrintWriter writer;
 
                 if (!file.exists()) {
                     try {
-
                         file.createNewFile();
-                        csvWriter = new PrintWriter(new FileWriter(file, true));
+                        writer = new PrintWriter(new FileWriter(file, true));
                         int last = 0;
                         int count = 0;
-                        csvWriter.print(_workoutName+"\nTime,AccX,AccY,AccZ,AccT,GyroX,GyroY,GyroZ");
-                        csvWriter.append('\n');
+                        writer.print(_name+"\nTime,AccX,AccY,AccZ,AccT,GyroX,GyroY,GyroZ");
+                        writer.append('\n');
                         for (int i = 0; i < string.length(); i++) {
                             if (string.charAt(i) == ';') {
-                                csvWriter.print(string.substring(last + 1, i));
-                                csvWriter.append('\n');
+                                writer.print(string.substring(last + 1, i));
+                                writer.append('\n');
                                 last = i;
                             }
-
-
                         }
-                        csvWriter.print(string.substring(last, string.length() - 1));
-                        csvWriter.close();
+                        writer.print(string.substring(last, string.length() - 1));
+                        writer.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -85,34 +79,28 @@ SampleAverage sampleAverage = new SampleAverage();
                     file.delete();
                     try {
                         file.createNewFile();
-                        csvWriter = new PrintWriter(new FileWriter(file, true));
-                        csvWriter.print(_workoutName+"\nTime,AccX,AccY,AccZ,AccT");
-                        csvWriter.append('\n');
+                        writer = new PrintWriter(new FileWriter(file, true));
+                        writer.print(_name+"\nTime,AccX,AccY,AccZ,AccT");
+                        writer.append('\n');
                         int last = 0;
 
                         for (int i = 0; i < string.length(); i++) {
                             if (string.charAt(i) == ';') {
-                                csvWriter.print(string.substring(last + 1, i));
-                                csvWriter.append('\n');
+                                writer.print(string.substring(last + 1, i));
+                                writer.append('\n');
                                 last = i;
                             }
                         }
-                        csvWriter.print(string.substring(last, string.length() - 1));
-                        csvWriter.close();
-
+                        writer.print(string.substring(last, string.length() - 1));
+                        writer.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-
             } catch (Exception e) {
-
                 e.printStackTrace();
-
             }
-
     }
-
 
     public String load() {
         String line1 = "";
@@ -136,5 +124,37 @@ SampleAverage sampleAverage = new SampleAverage();
             error = e.getMessage();
         }
         return line1;
+    }
+    public void addData(String data,File fileParent) {
+        File file = new File(fileParent, _fileName);
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+            try {
+                file.canWrite();
+                outputStream = _context.openFileOutput(_fileName,Context.MODE_WORLD_READABLE);
+                outputStream.write(data.getBytes());
+                outputStream.close();
+                PrintWriter writer = new PrintWriter(new FileWriter(file, true));
+                writer.append('\n');
+                int last = 0;
+                for (int i = 0; i < data.length(); i++) {
+                    if (data.charAt(i) == ';') {
+                        writer.print(data.substring(last + 1, i));
+                        writer.append('\n');
+                        last = i;
+                    }
+                }
+                writer.print(data.substring(last, data.length() - 1));
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
     }
 }

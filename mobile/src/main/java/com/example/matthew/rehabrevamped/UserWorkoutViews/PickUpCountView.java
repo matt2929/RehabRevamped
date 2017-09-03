@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -65,8 +66,9 @@ public class PickUpCountView extends viewabstract {
     }
 
     @Override
-    public void stringInput(String s) {
-displayS=s;
+    public void stringInput(String s)
+    {
+        displayS=s;
     }
 
 }

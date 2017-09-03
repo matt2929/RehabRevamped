@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -35,6 +36,7 @@ public class WorkoutSelectionScreen extends
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_selection_screen);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         pickUpButt = (Button) findViewById(R.id.pickupcupchoice);
@@ -62,17 +64,19 @@ public class WorkoutSelectionScreen extends
         leftHand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CurrentWorkoutView.removeAllViews();
                 isLeftHand=true;
-                Intent intent = new Intent(getApplicationContext(), WorkoutSessionActivity.class);
+                Intent intent = new Intent(getApplicationContext(), WorkoutSessionActivity.class).putExtra("hand", true);
                 startActivity(intent);
-
             }
         });
         rightHand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CurrentWorkoutView.removeAllViews();
                 isLeftHand=false;
-                Intent intent = new Intent(getApplicationContext(), WorkoutSessionActivity.class);
+
+                Intent intent = new Intent(getApplicationContext(), WorkoutSessionActivity.class).putExtra("hand", false);
                 startActivity(intent);
 
             }
@@ -81,7 +85,12 @@ public class WorkoutSelectionScreen extends
             @Override
             public void onClick(View view) {
                 setViewHandSelection();
-                CurrentWorkout = new PickUpCount();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new PickUpCount();
+                    }
+                }).start();
                 CurrentWorkoutView = new PickUpCountView(getApplicationContext());
             }
         });
@@ -89,7 +98,12 @@ public class WorkoutSelectionScreen extends
             @Override
             public void onClick(View view) {
                 setViewHandSelection();
-                CurrentWorkout = new TwistCup();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new TwistCup();
+                    }
+                }).start();
                 CurrentWorkoutView = new TwistCupView(getApplicationContext());
             }
         });
@@ -97,7 +111,12 @@ public class WorkoutSelectionScreen extends
             @Override
             public void onClick(View view) {
                 setViewHandSelection();
-                CurrentWorkout = new PourCup();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new PourCup();
+                    }
+                }).start();
                 CurrentWorkoutView = new PourCupView(getApplicationContext());
             }
         });
@@ -108,7 +127,12 @@ public class WorkoutSelectionScreen extends
             }
         });
         setWorkoutPickView();
-        CurrentWorkout = new UnlockPhone();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CurrentWorkout = new UnlockPhone();
+            }
+        }).start();
         CurrentWorkoutView = new UnlockPhoneView(getApplicationContext());
     }
 
