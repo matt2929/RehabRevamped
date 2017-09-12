@@ -89,7 +89,7 @@ public class PhoneNumber implements WorkoutSession{
     /**
      * compare the last value in origonalPhoneNumber and currentPhoneNumber returns true if there
      * the same false otherwise
-     * @return
+     * @return boolean
      */
     private boolean comparePhoneNumbers() {
         String origonalValueToCompare = origonalPhoneNumber.substring(currentPhoneNumber.length()-1,currentPhoneNumber.length());

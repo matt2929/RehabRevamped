@@ -50,7 +50,7 @@
             android:layout_height="200dip"
             android:layout_gravity="left"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            />
 
     </LinearLayout>
 
