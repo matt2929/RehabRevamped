@@ -18,6 +18,7 @@ import com.example.matthew.rehabrevamped.UserWorkoutViews.PickUpCountView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PourCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.TwistCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.WalkWithCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.WorkoutView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.viewabstract;
 import com.example.matthew.rehabrevamped.UserWorkouts.*;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class WorkoutSelectionScreen extends Activity {
     ArrayList<View> pickHandView = new ArrayList<>();
     ArrayList<View> selectWorkoutView = new ArrayList<>();
-    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt, leftHand, rightHand;
+    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt, leftHand, rightHand,walkButt;
     View fakeView;
     static com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession CurrentWorkout;
     static viewabstract CurrentWorkoutView;
@@ -46,6 +47,7 @@ public class WorkoutSelectionScreen extends Activity {
         phoneNumberButt = (Button) findViewById(R.id.phonenumberchoice);
         leftHand = (Button) findViewById(R.id.workoutchoicelefthand);
         rightHand = (Button) findViewById(R.id.workoutchoicerighthand);
+        walkButt = (Button) findViewById(R.id.walkchoice);
         fakeView = (View) findViewById(R.id.fakeView);
 
         //
@@ -58,7 +60,7 @@ public class WorkoutSelectionScreen extends Activity {
         selectWorkoutView.add(horPickUpButt);
         selectWorkoutView.add(twistButt);
         selectWorkoutView.add(phoneNumberButt);
-
+        selectWorkoutView.add(walkButt);
 
         leftHand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +76,6 @@ public class WorkoutSelectionScreen extends Activity {
             public void onClick(View view) {
                 CurrentWorkoutView.removeAllViews();
                 isLeftHand=false;
-
                 Intent intent = new Intent(getApplicationContext(), WorkoutSessionActivity.class).putExtra("hand", false);
                 startActivity(intent);
 
@@ -132,6 +133,20 @@ public class WorkoutSelectionScreen extends Activity {
                     }
                 }).start();
 
+            }
+        });
+        walkButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewHandSelection();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new WalkWithCup();
+                    }
+                }).start();
+                CurrentWorkoutView = new WalkWithCupView(getApplicationContext());
             }
         });
         setWorkoutPickView();

@@ -1,6 +1,17 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.os.Handler;
+import android.util.Log;
+
+import com.example.matthew.rehabrevamped.R;
+import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  * Created by Matthew on 7/12/2016.
@@ -8,10 +19,13 @@ import android.content.Context;
 public class WalkWithCup implements WorkoutSession {
     int goodHoldMax = 0;
     int numGoodHolds = 0;
+    //
+    JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(1);
+    long jerkStartTime = System.currentTimeMillis();
 
     @Override
     public int getGrade() {
-        return 0;
+        return spillageEvents*-1;
     }
 
     int startCount;
@@ -24,31 +38,73 @@ public class WalkWithCup implements WorkoutSession {
     boolean haveIStarted = false;
     int total = 0;
     String whatShouldISay = "";
-
+    Long totalTime = 30000L;
+    Float totalAccT = 0f;
+    float lastX = 9, lastY = 9, lastZ = 9;
+    float averageTotal = 0;
+    int averageCount = 0;
+    int spillageEvents = 0;
+    //SFX
+    MediaPlayer mediaPlayer = null;
+    boolean mediaChecked = false;
     @Override
-    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
+    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount, float magX, float magY, float magZ, long magTime, Context context) {
+        float tempX = accX, tempY = accY, tempZ = accZ;
+        accX = Math.abs(lastX - accX);
+        accY = Math.abs(lastY - accY);
+        accZ = Math.abs(lastZ - accZ);
+        lastX = tempX;
+        lastY = tempY;
+        lastZ = tempZ;
         float accT = (float) Math.pow((Math.pow(accX, 2) + Math.pow(accY, 2) + Math.pow(accZ, 2)), .5);
+        averageTotal = (((averageCount) * averageTotal) + accT) / (averageCount + 1);
+        averageCount++;
         float slope = (accT - lastValue);
+        if (haveIStarted) {
+            isAnEvent(averageTotal,lastValue, accT, 1.5);
+        }
+        lastValue = accT;
         long currentTime = System.currentTimeMillis();
-        if ((currentTime - startTime) > 8000) {
+        if ((currentTime - startTime) > 6000 && !haveIStarted) {
             if (!haveIStarted) {
                 haveIStarted = true;
-                shouldItalk = true;
-                whatShouldISay = "Start Walking";
+                startTime = System.currentTimeMillis();
             }
-            if (lastSlope > 0 && slope < 0 && lastValue >= 10 && lastValue > 10) {
-                totalSteps++;
-            }
-            lastSlope = slope;
-            lastValue = accT;
-        } else {
-
+        }
+        if (!mediaChecked) {
+            mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
+            mediaChecked = true;
+            mediaPlayer.setLooping(true);
         }
     }
 
+    public void isAnEvent(float average, float prior, float present, double thresehold) {
+
+        Log.e("pre vs .post", "\nPrior: " +prior +"\nPresent: "+present+"\nAverage: "+averageTotal);
+        if (Math.abs(prior-present)>average*thresehold) {
+            Log.e("Event", "T");
+            spillageEvents++;
+            triggerNoise();
+        } else {
+            Log.e("Event", "F");
+        }
+    }
+    public void triggerNoise(){
+        if (mediaPlayer.isPlaying()) {
+        }else{
+            mediaPlayer.start();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mediaPlayer.pause();
+                }
+            }, 750);
+        }
+    }
     @Override
     public boolean workoutFinished() {
-        if (totalSteps == 100) {
+        if (Math.abs(System.currentTimeMillis() - startTime) > totalTime) {
             return true;
         }
         return false;
@@ -56,12 +112,21 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public String result() {
-        return "Steps: " + totalSteps;
+        return "";
     }
 
     @Override
     public String stringOut() {
-        return null;
+        double timeElapsed = Math.abs(System.currentTimeMillis() - startTime);
+        return "Time: " + (int) timeElapsed / 1000 + "s"
+                + "\nPercentage: " + formatSignificant((timeElapsed / totalTime) * 100, 2) + "%";
+
+    }
+
+    public static String formatSignificant(double value, int significant) {
+        MathContext mathContext = new MathContext(significant, RoundingMode.DOWN);
+        BigDecimal bigDecimal = new BigDecimal(value, mathContext);
+        return bigDecimal.toPlainString();
     }
 
     @Override
@@ -88,18 +153,18 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public float[][] getHoldParamaters() {
-        return new float[][]{{0,0,0,0,0,0},{0,0,0,0,0,0}};
+        return new float[][]{{0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}};
     }
+
     @Override
     public float getJerkScore() {
-        return 0f;
+        return totalAccT / total;
     }
 
     @Override
     public String whatToSay() {
         shouldItalk = false;
         return whatShouldISay;
-
     }
 
     @Override
@@ -115,6 +180,6 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return null;
+        return "Hold the cup or bowl infront of you. Walk in sync with the cadence. Start when I say, Begin.";
     }
 }

@@ -325,9 +325,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             //Save Game
             if (currentWorkout.workoutFinished()) {
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
-                tts.speak(currentWorkout.getGrade() + "%", TextToSpeech.QUEUE_ADD, null);
-                Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "%", Toast.LENGTH_LONG).show();
-
+                tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);
+                Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade()+"", Toast.LENGTH_LONG).show();
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"RehabRevamped");
                 if(!file.exists()){
                     file.mkdir();
