@@ -151,6 +151,11 @@ public class PourCup implements WorkoutSession {
 
     }
 
+    @Override
+    public String csvFormat() {
+        return null;
+    }
+
 
     @Override
     public void holdAccuracy(float accX, float accY, float accZ) {

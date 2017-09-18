@@ -307,11 +307,16 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 sampleAverage.addSmoothAverage(magDiff);
 
-
-                saveString +=
-                        +hour + ":" + minute + ":" + second
-                                + "," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
-                                + gyroX + "," + gyroY + "," + gyroZ + ";";
+                if(currentWorkout.getWorkoutName().equals("Phone Number")) {
+                    saveString +=
+                            +hour + ":" + minute + ":" + second + ","+currentWorkout.csvFormat();
+                }
+                else{
+                    saveString +=
+                            +hour + ":" + minute + ":" + second
+                                    + "," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
+                                    + gyroX + "," + gyroY + "," + gyroZ + ";";
+                }
                 if (currentWorkout.dataOut() != null) {
                     currentView.dataInput(currentWorkout.dataOut());
                 }
@@ -325,8 +330,18 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             //Save Game
             if (currentWorkout.workoutFinished()) {
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
-                tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);
-                Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade()+"", Toast.LENGTH_LONG).show();
+
+                if(currentWorkout.getWorkoutName().equals("Phone Number")){
+                    tts.speak("Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(),
+                            "Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%",
+                            Toast.LENGTH_LONG).show();
+                    Log.i("phoneTest",currentWorkout.stringOut());
+                }
+                else {
+                    tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
+                }
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"RehabRevamped");
                 if(!file.exists()){
                     file.mkdir();
@@ -362,20 +377,6 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                     int offValue = currentWorkout.getGrade() - CalculateAverages.calculateAverage(lower);
                     Toast.makeText(getApplicationContext(), offValue + "off from the target", Toast.LENGTH_LONG).show();
                 }
-                /*
-                SaveData average = new SaveData(getApplicationContext(), currentWorkout.getWorkoutName()+"_"+hand,".csv");
-                average.addData(currentWorkout.getGrade()+"",file);
-
-                int difference;
-                average.saveData(saveString,file);
-                try {
-                    Serialize serialize = new Serialize(getApplicationContext());
-                    serialize.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), WorkoutSelectionScreen.isLeftHand, currentWorkout.saveData());
-                    Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "%", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                */
                 saveString = "";
                 //   sendAMessageToWatch(MessagingValues.WORKOUTOVER);
                 workoutInProgress = false;

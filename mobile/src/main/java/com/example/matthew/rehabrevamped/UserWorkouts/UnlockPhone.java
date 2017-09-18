@@ -132,4 +132,9 @@ public class UnlockPhone implements WorkoutSession {
         x = X;
         y = Y;
     }
+
+    @Override
+    public String csvFormat() {
+        return null;
+    }
 }
