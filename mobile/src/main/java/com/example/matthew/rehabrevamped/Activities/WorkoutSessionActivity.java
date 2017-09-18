@@ -336,7 +336,6 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                     Toast.makeText(getApplicationContext(),
                             "Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%",
                             Toast.LENGTH_LONG).show();
-                    Log.i("phoneTest",currentWorkout.stringOut());
                 }
                 else {
                     tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);

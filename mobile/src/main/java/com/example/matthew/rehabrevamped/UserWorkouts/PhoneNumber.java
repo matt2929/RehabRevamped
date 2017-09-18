@@ -88,6 +88,7 @@ public class PhoneNumber implements WorkoutSession{
             }else{
                 workoutView.setResultText(currentPhoneNumber);
             }
+            workoutView.setLastCheck(true);
         }
     }
 
@@ -103,7 +104,6 @@ public class PhoneNumber implements WorkoutSession{
         if(n>1){
             origonalValueToCompare = origonalPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length()+1-n);
             currentValueToCompare = sentPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length()+1-n);
-            Log.i("PhoneTest",(sentPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length()+1-n))+" "+origonalPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length()+1-n));
         }
         else{
             origonalValueToCompare = origonalPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length());
@@ -180,6 +180,7 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public int getGrade() {
+        Log.i("phoneTest",""+getAccuracy());
         return getAccuracy();
     }
 
@@ -191,12 +192,13 @@ public class PhoneNumber implements WorkoutSession{
     private int getAccuracy() {
         int numberOfIsCorrect = 0;
         for(int i =0;i<data.get(1).size();i++){
-            Log.i("phoneTest",""+data.get(1).get(i));
             if((Boolean) data.get(1).get(i)==true){
                 numberOfIsCorrect=numberOfIsCorrect+1;
             }
         }
-        return (numberOfIsCorrect/(data.get(1).size()))*100;
+        Log.i("phoneTest",""+numberOfIsCorrect+" "+(data.get(1).size())+" "+(numberOfIsCorrect/(data.get(1).size())));
+        double n =(numberOfIsCorrect/(data.get(1).size()));
+        return (int)(n)*100;
     }
 
     @Override

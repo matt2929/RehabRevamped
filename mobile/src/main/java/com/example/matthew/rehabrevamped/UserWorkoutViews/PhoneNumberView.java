@@ -37,9 +37,12 @@ public class PhoneNumberView extends viewabstract  {
     GridLayout gridLayout;
     private final TextView resultText = new TextView(getContext());
     private GridLayout layout;
+    private boolean instant=true;
     double time=-1;
     private String currentPhoneNumber="";
     private String  origonalPhoneNumber ="";
+    private boolean lastCheck=true;
+
     public PhoneNumberView(Context context) {
         super(context);
         layout = new GridLayout(getContext());
@@ -104,6 +107,7 @@ public class PhoneNumberView extends viewabstract  {
         layout.setRowCount(4);
 
         gridLayout.addView(layout,2);
+
     }
 
     /**
@@ -115,60 +119,78 @@ public class PhoneNumberView extends viewabstract  {
         super.onDraw(canvas);
         removeAllViews();
         addView(gridLayout);
-        final TextToSpeech tts = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-
-            }
-        });
-        int number=0;
-        for(int k= 0;k<5;k++) {
-            LinearLayout buttonLayout = new LinearLayout(getContext());
-            buttonLayout.setWeightSum(3);
-
-            for (int i = 0; i < 3; i++) {
-                if(number==10){
-                    break;
+        Log.i("WASD", ""+(layout.getHeight() / 5));
+        /*
+        if(instant==true &&(layout.getHeight() / 5)!=0) {
+            for (int i = 0; i < layout.getChildCount(); i++) {
+                ViewGroup.LayoutParams lp = layout.getChildAt(i).getLayoutParams();
+                lp.height = layout.getHeight() / 5;
+                layout.getChildAt(i).setLayoutParams(lp);
+                Log.i("WASD", "test" + i);
+                if (i == 4) {
+                    instant = false;
                 }
-                final Button button = new Button(getContext());
-                button.setTextSize(60);
-                button.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f));
-                final int f = number;
-                number++;
-                button.setText(f + "");
-                button.setBackgroundColor(Color.GRAY);
-                button.setOnTouchListener(new OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        double d = Calendar.getInstance().getTimeInMillis();
-                        if (time < 0) {
-                            time = d;
-                        }
-                        if ((d - time) > 200) {
-                            tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
-                            currentPhoneNumber = currentPhoneNumber + f;
-                            time = d;
-                            button.setBackgroundColor(Color.GREEN);
-                            final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    button.setBackgroundColor(Color.GRAY);
-                                }
-                            }, 100);
-
-                        }
-                        return false;
-                    }
-                });
-                buttonLayout.addView(button);
 
             }
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            lp.height=layout.getHeight()/5;
-            buttonLayout.setLayoutParams(lp);
+        }
+        */
+        if(instant==true &&(layout.getHeight() / 5)!=0) {
+            final TextToSpeech tts = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
 
-            layout.addView(buttonLayout);
+                }
+            });
+            int number = 0;
+            for (int k = 0; k < 5; k++) {
+                LinearLayout buttonLayout = new LinearLayout(getContext());
+                buttonLayout.setWeightSum(3);
+
+                for (int i = 0; i < 3; i++) {
+                    if (number == 10) {
+                        break;
+                    }
+                    final Button button = new Button(getContext());
+                    button.setTextSize(60);
+                    button.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f));
+                    final int f = number;
+                    number++;
+                    button.setText(f + "");
+                    button.setBackgroundColor(Color.GRAY);
+                    button.setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            double d = Calendar.getInstance().getTimeInMillis();
+                            if (time < 0) {
+                                time = d;
+                            }
+                            if ((d - time) > 50 && lastCheck) {
+                                tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
+                                Log.i("WASD",""+f);
+                                currentPhoneNumber = currentPhoneNumber + f;
+                                time = d;
+                                button.setBackgroundColor(Color.GREEN);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        button.setBackgroundColor(Color.GRAY);
+                                    }
+                                }, 50);
+                                lastCheck=false;
+                            }
+                            return false;
+                        }
+                    });
+                    buttonLayout.addView(button);
+
+                }
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                //lp.height=layout.getHeight()/5;
+                buttonLayout.setLayoutParams(lp);
+
+                layout.addView(buttonLayout);
+            }
         }
     }
 
@@ -221,5 +243,8 @@ public class PhoneNumberView extends viewabstract  {
         // DecimalFormat formatter = new DecimalFormat("#,###,###,####");
         // S = formatter.format((Object)S);
         return S;
+    }
+    public void setLastCheck(boolean b){
+        lastCheck=b;
     }
 }
