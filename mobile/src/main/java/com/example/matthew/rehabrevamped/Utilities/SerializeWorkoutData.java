@@ -18,14 +18,14 @@ import java.util.ArrayList;
 /**
  * Created by Matthew on 6/2/2016.
  */
-public class Serialize implements Serializable {
+public class SerializeWorkoutData implements Serializable {
 
     Context context;
     File dir;
     File file;
     public static boolean wasData = true;
 
-    public Serialize(Context c) throws IOException {
+    public SerializeWorkoutData(Context c) throws IOException {
         dir = new File(c.getFilesDir() + "/serialisedRehab");
 
         dir.mkdirs();

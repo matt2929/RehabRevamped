@@ -2,34 +2,22 @@ package com.example.matthew.rehabrevamped.Activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.CalculateAverages;
 import com.example.matthew.rehabrevamped.Utilities.HistoryDisplayAdapter;
-import com.example.matthew.rehabrevamped.Utilities.SaveData;
-import com.example.matthew.rehabrevamped.Utilities.Serialize;
+import com.example.matthew.rehabrevamped.Utilities.SerializeWorkoutData;
 import com.example.matthew.rehabrevamped.Utilities.WorkoutHistoricalData;
-import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class HistoryList extends Activity {
@@ -37,7 +25,7 @@ public class HistoryList extends Activity {
     ArrayList<String> WorkoutStrings = new ArrayList<String>();
     static String workoutName = "";
     static ArrayList<WorkoutHistoricalData.WorkoutSession> AllWorkOuts = new ArrayList<WorkoutHistoricalData.WorkoutSession>();
-    Serialize serialize;
+    SerializeWorkoutData serializeWorkoutData;
     static int workoutPosition;
     ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
     String hand = "";
@@ -51,11 +39,11 @@ public class HistoryList extends Activity {
         lv = (ListView) findViewById(R.id.HistoryView);
 
         try {
-            serialize = new Serialize(getApplicationContext());
+            serializeWorkoutData = new SerializeWorkoutData(getApplicationContext());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        AllWorkOuts = serialize.getUsers(getApplicationContext());
+        AllWorkOuts = serializeWorkoutData.getUsers(getApplicationContext());
         WorkoutStrings.add("HistoryList\n");
         int i = 0;
 
@@ -80,7 +68,7 @@ public class HistoryList extends Activity {
         //    @Override
         //    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //        Log.i("Alpha", "test");
-                // AllWorkOuts = serialize.getUsers(getApplicationContext());
+                // AllWorkOuts = serializeWorkoutData.getUsers(getApplicationContext());
        //         workoutPosition = position - 1;
        //         workoutName = AllWorkOuts.get(workoutPosition).getWorkoutName();
        //         Intent intent = new Intent(getApplicationContext(), HistoryGraph.class);

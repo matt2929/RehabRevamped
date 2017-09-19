@@ -18,19 +18,26 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.matthew.rehabrevamped.UserWorkoutViews.WorkoutView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.HorizontalPickUpCountView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.PhoneNumberView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.PickUpCountView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.TwistCupView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.WalkWithCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.viewabstract;
+import com.example.matthew.rehabrevamped.UserWorkouts.HorizontalPickUpCount;
+import com.example.matthew.rehabrevamped.UserWorkouts.PhoneNumber;
+import com.example.matthew.rehabrevamped.UserWorkouts.PickUpCount;
+import com.example.matthew.rehabrevamped.UserWorkouts.TwistCup;
+import com.example.matthew.rehabrevamped.UserWorkouts.WalkWithCup;
 import com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession;
 import com.example.matthew.rehabrevamped.Utilities.CalculateAverages;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
-import com.example.matthew.rehabrevamped.Utilities.SaveData;
-import com.example.matthew.rehabrevamped.Utilities.Serialize;
+import com.example.matthew.rehabrevamped.Utilities.SaveDataInTextFile;
+import com.example.matthew.rehabrevamped.Utilities.SerializeWorkoutData;
 import com.example.matthew.rehabrevamped.Utilities.WorkoutHistoricalData;
+import com.example.matthew.rehabrevamped.Utilities.WorkoutParameters;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
@@ -46,10 +53,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Handler;
 
 public class WorkoutSessionActivity extends Activity implements SensorEventListener, TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener {
-    SaveData saveData;
+    SaveDataInTextFile saveDataInTextFile;
     GoogleApiClient mGoogleApiClient;
     private Node mNode;
     private SensorManager mSensorManager;
@@ -58,8 +64,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private float gyroX = 0, gyroY = 0, gyroZ = 0;
     private float gravX = 0, gravY = 0, gravZ = 0;
     private float magX = 0, magY = 0, magZ = 0;
-    private long timeAcc=0,timeGyro=0,timeMag=0;
-    private Sensor mAcc, mGyro, mStep,mGrav,mMag;
+    private long timeAcc = 0, timeGyro = 0, timeMag = 0;
+    private Sensor mAcc, mGyro, mStep, mGrav, mMag;
     AudioManager mgr = null;
     public static float width = 0, height = 0;
     private WorkoutSession currentWorkout;
@@ -75,15 +81,27 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     viewabstract currentView;
     boolean noConformation = true;
     boolean hand;
-
+    boolean AutoMode = false;
+    String autoPreviousWorkout="";
     protected PowerManager.WakeLock mWakeLock;
+    ArrayList<WorkoutParameters> workoutParameterses;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentView = WorkoutSelectionScreen.CurrentWorkoutView;
-        currentView.removeAllViews();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            AutoMode = true;
+            autoPreviousWorkout = bundle.getString("Auto");
+            workoutParameterses = (ArrayList<WorkoutParameters>) bundle.getSerializable("wokoutParameters");
 
-        setContentView(currentView);
+            Toast.makeText(getApplicationContext(), "Data Loaded", Toast.LENGTH_SHORT).show();
+        }
+        if (AutoMode == false) {
+            currentView = WorkoutSelectionScreenManual.CurrentWorkoutView;
+            setContentView(currentView);
+        } else {
+            setActivityForAuto(autoPreviousWorkout);
+        }
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         this.mWakeLock.acquire();
@@ -123,7 +141,9 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         });
         mSensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
         List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-        currentWorkout = WorkoutSelectionScreen.CurrentWorkout;
+        if (!AutoMode) {
+            currentWorkout = WorkoutSelectionScreenManual.CurrentWorkout;
+        }
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
             mAcc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mSensorManager.registerListener(this, mAcc, SensorManager.SENSOR_DELAY_NORMAL);
@@ -142,7 +162,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             mGrav = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
             mSensorManager.registerListener(this, mGrav, Sensor.TYPE_GRAVITY);
         }
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
             mMag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
             mSensorManager.registerListener(this, mMag, Sensor.TYPE_MAGNETIC_FIELD);
         }
@@ -198,8 +218,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 }
                 if (dataRaw.equals("Error")) {
 
-                    Toast.makeText(getApplicationContext(),"Bad Hold",Toast.LENGTH_SHORT).cancel();
-                    Toast.makeText(getApplicationContext(),"Bad Hold",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Bad Hold", Toast.LENGTH_SHORT).cancel();
+                    Toast.makeText(getApplicationContext(), "Bad Hold", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -223,23 +243,31 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             }
         }).start();
     }
+
     /**
      * Constantly checks the sensors and sends the data to the workout class that has been selected.
-     As long as currentWorkout.workoutFinished() == false, it will keep doing so. If its true then
-     it will verbally tell and send a toast of the users average jerk score. It will also send the
-     data to a .csv file and store it in SDCard/Downloads/rehabrevamped. If there is enough data
-     (currently if the current activity has been done at least twice with both hands) then it will
-     also display a toast stating the difference between the score the user got and the red line
-     jerk score.
+     * As long as currentWorkout.workoutFinished() == false, it will keep doing so. If its true then
+     * it will verbally tell and send a toast of the users average jerk score. It will also send the
+     * data to a .csv file and store it in SDCard/Downloads/rehabrevamped. If there is enough data
+     * (currently if the current activity has been done at least twice with both hands) then it will
+     * also display a toast stating the difference between the score the user got and the red line
+     * jerk score.
+     *
      * @param event
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
+        boolean leftHand = false;
+        if(AutoMode){
+
+        }else{
+           leftHand = WorkoutSelectionScreenManual.isLeftHand;
+        }
         if (noConformation == true) {
-            int left = 0;
-            if (WorkoutSelectionScreen.isLeftHand) {
-                sendAMessageToWatch(
-                        "Start," + currentWorkout.getHoldParamaters()[left][0]
+                    int left = 0;
+                    if (leftHand) {
+                        sendAMessageToWatch(
+                                "Start," + currentWorkout.getHoldParamaters()[left][0]
                                 + "," + currentWorkout.getHoldParamaters()[left][1]
                                 + "," + currentWorkout.getHoldParamaters()[left][2]
                                 + "," + currentWorkout.getHoldParamaters()[left][3]
@@ -274,14 +302,14 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
             walkCount = event.values[0];
 
-        }else if (sensor.getType() == Sensor.TYPE_GRAVITY){
-            gravX=event.values[0];
-            gravY=event.values[1];
-            gravZ=event.values[2];
-        }else if(sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-            magX=event.values[0];
-            magY=event.values[1];
-            magZ=event.values[2];
+        } else if (sensor.getType() == Sensor.TYPE_GRAVITY) {
+            gravX = event.values[0];
+            gravY = event.values[1];
+            gravZ = event.values[2];
+        } else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            magX = event.values[0];
+            magY = event.values[1];
+            magZ = event.values[2];
             timeMag = event.timestamp;
         }
         if (workoutInProgress) {
@@ -297,8 +325,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 float magDiff = Math.abs(accY - lastValue);
                 lastValue = accY;
 
-                currentWorkout.dataIn(accX, accY, accZ, timeAcc,gyroX, gyroY, gyroZ, timeGyro,(int) walkCount, magX, magY, magZ, timeMag,getApplicationContext());
-                saveData = new SaveData(getApplicationContext(), currentWorkout.getWorkoutName(),".csv");
+                currentWorkout.dataIn(accX, accY, accZ, timeAcc, gyroX, gyroY, gyroZ, timeGyro, (int) walkCount, magX, magY, magZ, timeMag, getApplicationContext());
+                saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv");
                 //Should App Talk?
                 if (currentWorkout.shouldISaySomething()) {
                     tts.speak(currentWorkout.whatToSay(), TextToSpeech.QUEUE_ADD, null);
@@ -325,52 +353,51 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             //Save Game
             if (currentWorkout.workoutFinished()) {
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
-                tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);
-                Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade()+"", Toast.LENGTH_LONG).show();
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"RehabRevamped");
-                if(!file.exists()){
+                tts.speak(currentWorkout.getGrade() + "", TextToSpeech.QUEUE_ADD, null);
+                Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "RehabRevamped");
+                if (!file.exists()) {
                     file.mkdir();
                 }
-                saveData.saveData(saveString,file);
-                Serialize serialize = null;
+                saveDataInTextFile.saveData(saveString, file);
+                SerializeWorkoutData serializeWorkoutData = null;
                 try {
-                    serialize = new Serialize(getApplicationContext());
+                    serializeWorkoutData = new SerializeWorkoutData(getApplicationContext());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 ArrayList<Integer> left = new ArrayList<Integer>();
                 ArrayList<Integer> right = new ArrayList<Integer>();
 
-                ArrayList<WorkoutHistoricalData.WorkoutSession> AllWorkOuts = serialize.getUsers(getApplicationContext());
+                ArrayList<WorkoutHistoricalData.WorkoutSession> AllWorkOuts = serializeWorkoutData.getUsers(getApplicationContext());
                 for (WorkoutHistoricalData.WorkoutSession s : AllWorkOuts) {
-                    Log.i("serialize", s.getWorkoutName()+" "+s.getJerkScore());
+                    Log.i("serializeWorkoutData", s.getWorkoutName() + " " + s.getJerkScore());
                     if (s.getWorkoutName().equals(currentWorkout.getWorkoutName())) {
-                        if(s.isLeftHand()==hand){
+                        if (s.isLeftHand() == hand) {
                             left.add(s.getGrade());
-                        }
-                        else {
+                        } else {
                             right.add(s.getGrade());
                         }
                     }
                 }
 
-                Log.i("ser1",left.toString());
-                Log.i("ser2",right.toString());
-                ArrayList<Integer>  lower = CalculateAverages.compareLines(left,right);
-                if(right.size()>1 && left.size()>1){
+                Log.i("ser1", left.toString());
+                Log.i("ser2", right.toString());
+                ArrayList<Integer> lower = CalculateAverages.compareLines(left, right);
+                if (right.size() > 1 && left.size() > 1) {
 
                     int offValue = currentWorkout.getGrade() - CalculateAverages.calculateAverage(lower);
                     Toast.makeText(getApplicationContext(), offValue + "off from the target", Toast.LENGTH_LONG).show();
                 }
                 /*
-                SaveData average = new SaveData(getApplicationContext(), currentWorkout.getWorkoutName()+"_"+hand,".csv");
+                SaveDataInTextFile average = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName()+"_"+hand,".csv");
                 average.addData(currentWorkout.getGrade()+"",file);
 
                 int difference;
-                average.saveData(saveString,file);
+                average.saveDataInTextFile(saveString,file);
                 try {
-                    Serialize serialize = new Serialize(getApplicationContext());
-                    serialize.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), WorkoutSelectionScreen.isLeftHand, currentWorkout.saveData());
+                    SerializeWorkoutData serializeWorkoutData = new SerializeWorkoutData(getApplicationContext());
+                    serializeWorkoutData.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), WorkoutSelectionScreenManual.isLeftHand, currentWorkout.saveDataInTextFile());
                     Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "%", Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -380,12 +407,22 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 //   sendAMessageToWatch(MessagingValues.WORKOUTOVER);
                 workoutInProgress = false;
                 sendAMessageToWatch("Reset");
-                serialize.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), WorkoutSelectionScreen.isLeftHand, currentWorkout.saveData());
-                Intent intent = new Intent(getApplicationContext(), WorkoutOrHistory.class);
+                if (!AutoMode) {
+                    serializeWorkoutData.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), WorkoutSelectionScreenManual.isLeftHand, currentWorkout.saveData());
+                } else {
+                    serializeWorkoutData.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), false, currentWorkout.saveData());
+                }
+                Intent intent=null;
+                if (!AutoMode) {
+                    intent = new Intent(getApplicationContext(), WorkoutOrHistory.class);
+                } else {
+                    intent = new Intent(getApplicationContext(), WorkoutSelectionScreenAuto.class);
+                    intent.putExtra("previous",autoPreviousWorkout);
+                    intent.putExtra("wokoutParameters", workoutParameterses);
+                }
                 startActivity(intent);
             }
         }
-
     }
 
     @Override
@@ -451,9 +488,39 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     public void onUtteranceCompleted(String utteranceId) {
 
     }
+
     @Override
     public void onDestroy() {
         this.mWakeLock.release();
         super.onDestroy();
+    }
+
+    public void setActivityForAuto(String choice) {
+        switch (choice) {
+            case "V.Pickup":
+                currentView = new PickUpCountView(getApplicationContext());
+                currentWorkout = new PickUpCount();
+                break;
+            case "H.Pickup":
+                currentView = new HorizontalPickUpCountView(getApplicationContext());
+                currentWorkout = new HorizontalPickUpCount();
+                break;
+            case "Twist":
+                currentView = new TwistCupView(getApplicationContext());
+                currentWorkout = new TwistCup();
+                break;
+            case "PhoneNumber":
+                PhoneNumberView phoneNumberView = new PhoneNumberView(getApplicationContext());
+                currentView = phoneNumberView;//if phone number doesn't work this is why
+                currentWorkout = new PhoneNumber(phoneNumberView);
+                break;
+            case "WalkSpill":
+                currentView = new WalkWithCupView(getApplicationContext());
+                currentWorkout = new WalkWithCup();
+                break;
+        }
+
+        currentView.removeAllViews();
+        setContentView(currentView);
     }
 }

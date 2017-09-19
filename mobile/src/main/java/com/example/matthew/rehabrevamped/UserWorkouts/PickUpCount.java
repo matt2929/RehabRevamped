@@ -1,13 +1,11 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.text.format.Time;
 import android.util.Log;
 
 
-import com.example.matthew.rehabrevamped.Activities.WorkoutSelectionScreen;
 import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.GripAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;

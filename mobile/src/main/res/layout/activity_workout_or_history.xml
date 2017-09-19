@@ -10,35 +10,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.matthew.rehabrevamped.Activities.WorkoutOrHistory">
 
-    <Button
-        android:text="Workout"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/chooseworkout"
+        android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true">
 
-    <Button
-        android:text="History"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/choosehistory"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/chooseworkout"
-        android:layout_alignBottom="@+id/chooseworkout" />
+        <Button
+            android:id="@+id/chooseworkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Begin My Workout" />
 
-    <TextView
-        android:text="Begin workout or look at your history?"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:layout_marginBottom="65dp"
-        android:layout_above="@+id/chooseworkout"
-        android:layout_alignParentStart="true"
-        android:fontFamily="sans-serif"
-        android:layout_alignParentEnd="true"
-        android:textAlignment="center" />
+        <Button
+            android:id="@+id/findPreMadeWorkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Begin Prescribed Workout" />
+
+        <Button
+            android:id="@+id/choosehistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/chooseworkout"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/chooseworkout"
+            android:text="View My History" />
+    </LinearLayout>
+
 </RelativeLayout>

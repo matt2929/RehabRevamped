@@ -19,15 +19,12 @@ Button button;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
-
         button = (Button) findViewById(R.id.welcomescreencontinue);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(getApplicationContext(), WorkoutOrHistory.class);
                 startActivity(intent);
-
             }
         });
     }

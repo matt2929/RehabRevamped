@@ -16,7 +16,7 @@ import java.util.Calendar;
 /**
  * Created by Matthew on 7/14/2016.
  */
-public class SaveData {
+public class SaveDataInTextFile {
     File _myFile;
     FileOutputStream outputStream;
     FileInputStream inputStream;
@@ -26,7 +26,7 @@ public class SaveData {
     int count = 0;
     String _name="";
 SampleAverage sampleAverage = new SampleAverage();
-    public SaveData(Context context, String name,String fileType) {
+    public SaveDataInTextFile(Context context, String name, String fileType) {
         _name=name;
         _context = context;
 

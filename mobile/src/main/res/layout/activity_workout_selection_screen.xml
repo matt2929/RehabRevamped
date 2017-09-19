@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="2"
-    tools:context="com.example.matthew.rehabrevamped.Activities.WorkoutSelectionScreen">
+    tools:context="com.example.matthew.rehabrevamped.Activities.WorkoutSelectionScreenManual">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 android:layout_alignWithParentIfMissing="false"
                 android:layout_margin="20dp"
                 android:background="@android:color/holo_blue_bright"
-                android:text="Pick Up Cup" />
+                android:text="Verticle Pick Up Cup" />
 
             <Button
                 android:id="@+id/horizontalpickupcupchoice"

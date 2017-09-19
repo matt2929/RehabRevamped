@@ -3,4 +3,5 @@
     <color name="colorPrimary">#d1952d</color>
     <color name="colorPrimaryDark">#449f30</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="WorkoutListTitle">#5d5d97</color>
 </resources>

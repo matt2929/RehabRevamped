@@ -56,15 +56,17 @@ public class WalkWithCup implements WorkoutSession {
         lastX = tempX;
         lastY = tempY;
         lastZ = tempZ;
+        //This is the magnitude of acceleration among all axes
         float accT = (float) Math.pow((Math.pow(accX, 2) + Math.pow(accY, 2) + Math.pow(accZ, 2)), .5);
         averageTotal = (((averageCount) * averageTotal) + accT) / (averageCount + 1);
         averageCount++;
-        float slope = (accT - lastValue);
+        //if we started we will continually check for a 'spllash' event
         if (haveIStarted) {
             isAnEvent(averageTotal,lastValue, accT, 1.5);
         }
         lastValue = accT;
         long currentTime = System.currentTimeMillis();
+        // delay over begin workout
         if ((currentTime - startTime) > 6000 && !haveIStarted) {
             if (!haveIStarted) {
                 haveIStarted = true;
@@ -77,10 +79,9 @@ public class WalkWithCup implements WorkoutSession {
             mediaPlayer.setLooping(true);
         }
     }
-
+    //if current acceleration is greater than averageAcceleration * thresehold make splash sound
     public void isAnEvent(float average, float prior, float present, double thresehold) {
 
-        Log.e("pre vs .post", "\nPrior: " +prior +"\nPresent: "+present+"\nAverage: "+averageTotal);
         if (Math.abs(prior-present)>average*thresehold) {
             Log.e("Event", "T");
             spillageEvents++;
@@ -89,6 +90,7 @@ public class WalkWithCup implements WorkoutSession {
             Log.e("Event", "F");
         }
     }
+    //splash sound
     public void triggerNoise(){
         if (mediaPlayer.isPlaying()) {
         }else{
@@ -102,6 +104,7 @@ public class WalkWithCup implements WorkoutSession {
             }, 750);
         }
     }
+    //ends after given time
     @Override
     public boolean workoutFinished() {
         if (Math.abs(System.currentTimeMillis() - startTime) > totalTime) {
@@ -180,6 +183,6 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "Hold the cup or bowl infront of you. Walk in sync with the cadence. Start when I say, Begin.";
+        return "Hold the cup or bowl infront of you. Walk at a comfortable pace. Start when I say, Begin.";
     }
 }

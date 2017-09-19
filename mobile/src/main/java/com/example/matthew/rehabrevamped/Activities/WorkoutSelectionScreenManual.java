@@ -25,7 +25,7 @@ import com.example.matthew.rehabrevamped.UserWorkouts.*;
 
 import java.util.ArrayList;
 
-public class WorkoutSelectionScreen extends Activity {
+public class WorkoutSelectionScreenManual extends Activity {
     ArrayList<View> pickHandView = new ArrayList<>();
     ArrayList<View> selectWorkoutView = new ArrayList<>();
     Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt, leftHand, rightHand,walkButt;
