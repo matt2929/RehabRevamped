@@ -335,11 +335,16 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 sampleAverage.addSmoothAverage(magDiff);
 
-
-                saveString +=
-                        +hour + ":" + minute + ":" + second
-                                + "," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
-                                + gyroX + "," + gyroY + "," + gyroZ + ";";
+                if(currentWorkout.getWorkoutName().equals("Phone Number")) {
+                    saveString +=
+                            +hour + ":" + minute + ":" + second + ","+currentWorkout.csvFormat();
+                }
+                else{
+                    saveString +=
+                            +hour + ":" + minute + ":" + second
+                                    + "," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
+                                    + gyroX + "," + gyroY + "," + gyroZ + ";";
+                }
                 if (currentWorkout.dataOut() != null) {
                     currentView.dataInput(currentWorkout.dataOut());
                 }
@@ -353,10 +358,19 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             //Save Game
             if (currentWorkout.workoutFinished()) {
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
-                tts.speak(currentWorkout.getGrade() + "", TextToSpeech.QUEUE_ADD, null);
-                Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "RehabRevamped");
-                if (!file.exists()) {
+
+                if(currentWorkout.getWorkoutName().equals("Phone Number")){
+                    tts.speak("Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(),
+                            "Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
+                    tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
+                }
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"RehabRevamped");
+                if(!file.exists()){
                     file.mkdir();
                 }
                 saveDataInTextFile.saveData(saveString, file);

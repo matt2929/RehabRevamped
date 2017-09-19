@@ -38,4 +38,10 @@ public interface WorkoutSession {
 
     public void addTouche(float x, float y);
 
+    /**
+     * allows WorkoutClasses to modify the .csv file organization
+     * @return
+     */
+    public String csvFormat();
+
 }

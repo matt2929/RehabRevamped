@@ -17,12 +17,15 @@ import java.util.Random;
 
 public class PhoneNumber implements WorkoutSession{
 
-    private JerkScoreAnalysis jerkScoreAnalysis= new JerkScoreAnalysis(0);
     private String origonalPhoneNumber=null;
     private String currentPhoneNumber="";
     private PhoneNumberView workoutView;
     private double lastTime= -1;
     private ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
+    private double origonalTime;
+    private double finalTime;
+    private int lineCounter=-1;
+    private boolean isAction;
 
     /**
      * assigns the view and add Arraylists
@@ -59,30 +62,33 @@ public class PhoneNumber implements WorkoutSession{
      */
     @Override
     public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount, float magX, float magY, float magZ, long magTime, Context context) {
-        jerkScoreAnalysis.jerkAdd(accX,accY,accZ,accTime,gyroX,gyroY,gyroZ,gyroTime,magX,magY,magZ,magTime);
         if(origonalPhoneNumber==null){
             origonalPhoneNumber=workoutView.getOriginalPhoneNumber();
         }
         if(lastTime<0){
             lastTime = Calendar.getInstance().getTimeInMillis();
+            origonalTime=lastTime;
         }
-        if(!currentPhoneNumber.equals(workoutView.getPhoneNumber()) &&
+        String sentPhoneNumber=workoutView.getPhoneNumber();
+        if(!currentPhoneNumber.equals(sentPhoneNumber) &&
                 currentPhoneNumber.length()<=origonalPhoneNumber.length()){
-            currentPhoneNumber=workoutView.getPhoneNumber();
-            double timeDif= lastTime-Calendar.getInstance().getTimeInMillis();
-            boolean isCorrect = comparePhoneNumbers();
+
+
+            double currentTime = Calendar.getInstance().getTimeInMillis();
+            double timeDif= (currentTime-lastTime)/1000;
+            finalTime = currentTime;
+            boolean isCorrect = comparePhoneNumbers(sentPhoneNumber);
             data.get(0).add(timeDif);
             data.get(1).add(isCorrect);
+            lineCounter++;
+            isAction=true;
             if(isCorrect){
+                currentPhoneNumber=workoutView.getPhoneNumber();
                 workoutView.setResultText(currentPhoneNumber);
             }else{
-                if(currentPhoneNumber.length()==1) {
-                    currentPhoneNumber="";
-                }else{
-                    currentPhoneNumber=currentPhoneNumber.substring(0,currentPhoneNumber.length()-1);
-                }
                 workoutView.setResultText(currentPhoneNumber);
             }
+            workoutView.setLastCheck(true);
         }
     }
 
@@ -91,9 +97,18 @@ public class PhoneNumber implements WorkoutSession{
      * the same false otherwise
      * @return boolean
      */
-    private boolean comparePhoneNumbers() {
-        String origonalValueToCompare = origonalPhoneNumber.substring(currentPhoneNumber.length()-1,currentPhoneNumber.length());
-        String currentValueToCompare = currentPhoneNumber.substring(currentPhoneNumber.length()-1);
+    private boolean comparePhoneNumbers(String sentPhoneNumber) {
+        int n=sentPhoneNumber.length()-currentPhoneNumber.length();
+        String origonalValueToCompare;
+        String currentValueToCompare;
+        if(n>1){
+            origonalValueToCompare = origonalPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length()+1-n);
+            currentValueToCompare = sentPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length()+1-n);
+        }
+        else{
+            origonalValueToCompare = origonalPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length());
+            currentValueToCompare = sentPhoneNumber.substring(sentPhoneNumber.length()-n);
+        }
         if(currentValueToCompare.equals(origonalValueToCompare)){
             return true;
         }
@@ -112,6 +127,7 @@ public class PhoneNumber implements WorkoutSession{
             return false;
         }
         else if(currentPhoneNumber.length()==origonalPhoneNumber.length()){
+
             return true;
         }
         else {
@@ -131,7 +147,7 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public float getJerkScore() {
-        return jerkScoreAnalysis.getJerkAverage();
+        return 0;
     }
 
     @Override
@@ -149,7 +165,7 @@ public class PhoneNumber implements WorkoutSession{
     public String getWorkoutName() {
         return "Phone Number";
     }
-
+//NO
     @Override
     public float[][] getHoldParamaters() {
         //TEMPERARY
@@ -158,12 +174,31 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public String sayHowToHoldCup() {
-        return "Type in the phone number shown above as accurately and quickly as possible.";
+        return "";
+        //return "Type in the phone number shown above as accurately and quickly as possible.";
     }
 
     @Override
     public int getGrade() {
-        return jerkScoreAnalysis.getJerkAverage().intValue();
+        Log.i("phoneTest",""+getAccuracy());
+        return getAccuracy();
+    }
+
+    /**
+     * get the accuracy of the user by averaging the time the user clicked the correct button vs the time the
+     * us click the incorrect button.
+     * @return
+     */
+    private int getAccuracy() {
+        int numberOfIsCorrect = 0;
+        for(int i =0;i<data.get(1).size();i++){
+            if((Boolean) data.get(1).get(i)==true){
+                numberOfIsCorrect=numberOfIsCorrect+1;
+            }
+        }
+        Log.i("phoneTest",""+numberOfIsCorrect+" "+(data.get(1).size())+" "+(numberOfIsCorrect/(data.get(1).size())));
+        double n =(numberOfIsCorrect/(data.get(1).size()));
+        return (int)(n)*100;
     }
 
     @Override
@@ -173,7 +208,11 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public String stringOut() {
-        return null;
+        return getDuration();
+    }
+
+    private String getDuration() {
+        return ""+(finalTime-origonalTime)/1000;
     }
 
     @Override
@@ -185,4 +224,23 @@ public class PhoneNumber implements WorkoutSession{
     public void addTouche(float x, float y) {
 
     }
+
+    /**
+     * sets a new format to store the data in the csv file and is used
+     * by the WorkoutSessionActivity to be save the data in the csv file.
+     * @return
+     */
+    @Override
+    public String csvFormat() {
+        String result="";
+        if(isAction){
+            result="timeDiff:,"+data.get(0).get(lineCounter)+", isCorrect:,"+data.get(1).get(lineCounter)+";";
+            isAction=false;
+        }
+        else{
+            return "no Action;";
+        }
+        return result;
+    }
+
 }

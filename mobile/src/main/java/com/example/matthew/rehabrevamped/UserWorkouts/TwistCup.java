@@ -10,6 +10,10 @@ import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
  * Created by Matthew on 7/27/2016.
  */
 public class TwistCup implements WorkoutSession {
+    @Override
+    public String csvFormat() {
+        return null;
+    }
 
     int getPickupCountMax = 10;
     float lastDifference = 0;
