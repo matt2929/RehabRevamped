@@ -90,6 +90,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            //change back to true
             AutoMode = true;
             autoPreviousWorkout = bundle.getString("Auto");
             workoutParameterses = (ArrayList<WorkoutParameters>) bundle.getSerializable("wokoutParameters");
@@ -335,7 +336,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 sampleAverage.addSmoothAverage(magDiff);
 
-                if(currentWorkout.getWorkoutName().equals("Phone Number")) {
+                if(currentWorkout.getWorkoutName().equals("Phone Number") ||currentWorkout.getWorkoutName().equals("Unlock Phone")) {
                     saveString +=
                             +hour + ":" + minute + ":" + second + ","+currentWorkout.csvFormat();
                 }

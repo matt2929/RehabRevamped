@@ -111,7 +111,7 @@ public class PhoneNumberView extends viewabstract  {
     }
 
     /**
-     * gridView is added to the screen
+     * gridView is added to the screen and buttons are added to the grid view.
      * @param canvas
      */
     @Override
@@ -141,13 +141,45 @@ public class PhoneNumberView extends viewabstract  {
 
                 }
             });
-            int number = 0;
+            int number = 1;
             for (int k = 0; k < 5; k++) {
                 LinearLayout buttonLayout = new LinearLayout(getContext());
                 buttonLayout.setWeightSum(3);
 
                 for (int i = 0; i < 3; i++) {
                     if (number == 10) {
+                        final Button button = new Button(getContext());
+                        button.setTextSize(60);
+                        button.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f));
+                        final int z = 0;
+                        number++;
+                        button.setText(z + "");
+                        button.setBackgroundColor(Color.GRAY);
+                        button.setOnTouchListener(new OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                double d = Calendar.getInstance().getTimeInMillis();
+                                if (time < 0) {
+                                    time = d;
+                                }
+                                if ((d - time) > 25 && lastCheck) {
+                                    tts.speak(z + "", TextToSpeech.QUEUE_ADD, null);
+                                    currentPhoneNumber = currentPhoneNumber + z;
+                                    time = d;
+                                    button.setBackgroundColor(Color.GREEN);
+                                    final Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            button.setBackgroundColor(Color.GRAY);
+                                        }
+                                    }, 25);
+                                    lastCheck=false;
+                                }
+                                return false;
+                            }
+                        });
+                        buttonLayout.addView(button);
                         break;
                     }
                     final Button button = new Button(getContext());
@@ -164,7 +196,7 @@ public class PhoneNumberView extends viewabstract  {
                             if (time < 0) {
                                 time = d;
                             }
-                            if ((d - time) > 50 && lastCheck) {
+                            if ((d - time) > 25 && lastCheck) {
                                 tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
                                 Log.i("WASD",""+f);
                                 currentPhoneNumber = currentPhoneNumber + f;
@@ -176,7 +208,7 @@ public class PhoneNumberView extends viewabstract  {
                                     public void run() {
                                         button.setBackgroundColor(Color.GRAY);
                                     }
-                                }, 50);
+                                }, 25);
                                 lastCheck=false;
                             }
                             return false;

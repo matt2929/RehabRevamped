@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class WorkoutSelectionScreenManual extends Activity {
     ArrayList<View> pickHandView = new ArrayList<>();
     ArrayList<View> selectWorkoutView = new ArrayList<>();
-    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt, leftHand, rightHand,walkButt;
+    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt,unlockButt, leftHand, rightHand,walkButt;
     View fakeView;
     static com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession CurrentWorkout;
     static viewabstract CurrentWorkoutView;
@@ -48,6 +48,7 @@ public class WorkoutSelectionScreenManual extends Activity {
         leftHand = (Button) findViewById(R.id.workoutchoicelefthand);
         rightHand = (Button) findViewById(R.id.workoutchoicerighthand);
         walkButt = (Button) findViewById(R.id.walkchoice);
+        unlockButt = (Button) findViewById(R.id.unlockchoice);
         fakeView = (View) findViewById(R.id.fakeView);
 
         //
@@ -61,6 +62,7 @@ public class WorkoutSelectionScreenManual extends Activity {
         selectWorkoutView.add(twistButt);
         selectWorkoutView.add(phoneNumberButt);
         selectWorkoutView.add(walkButt);
+        selectWorkoutView.add(unlockButt);
 
         leftHand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +134,6 @@ public class WorkoutSelectionScreenManual extends Activity {
                         CurrentWorkout = new PhoneNumber(phoneNumberView);
                     }
                 }).start();
-
             }
         });
         walkButt.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +148,20 @@ public class WorkoutSelectionScreenManual extends Activity {
                     }
                 }).start();
                 CurrentWorkoutView = new WalkWithCupView(getApplicationContext());
+            }
+        });
+        unlockButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewHandSelection();
+                final UnlockPhoneView unlockPhoneView = new UnlockPhoneView(getApplicationContext());
+                CurrentWorkoutView = unlockPhoneView;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new UnlockPhone(unlockPhoneView);
+                    }
+                }).start();
             }
         });
         setWorkoutPickView();
