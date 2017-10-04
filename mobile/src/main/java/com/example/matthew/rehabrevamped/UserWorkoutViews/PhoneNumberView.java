@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.matthew.rehabrevamped.R;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -42,6 +43,9 @@ public class PhoneNumberView extends viewabstract  {
     private String currentPhoneNumber="";
     private String  origonalPhoneNumber ="";
     private boolean lastCheck=true;
+    int buttonLayoutID=View.generateViewId();
+    //list to remove
+    ArrayList<View> buttonViewsToRemove = new ArrayList<>();
 
     public PhoneNumberView(Context context) {
         super(context);
@@ -79,7 +83,6 @@ public class PhoneNumberView extends viewabstract  {
         gridLayout.setColumnCount(1);
         gridLayout.setRowCount(3);
 
-
         TextView phoneNumberText = new TextView(getContext());
         phoneNumberText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 
@@ -105,36 +108,13 @@ public class PhoneNumberView extends viewabstract  {
         layout.setLayoutParams( new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         layout.setColumnCount(1);
         layout.setRowCount(4);
-
+        generateButtonView();
         gridLayout.addView(layout,2);
 
     }
+    public void generateButtonView(){
+       // if(instant==true &&(layout.getHeight() / 5)!=0) {
 
-    /**
-     * gridView is added to the screen and buttons are added to the grid view.
-     * @param canvas
-     */
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        removeAllViews();
-        addView(gridLayout);
-        Log.i("WASD", ""+(layout.getHeight() / 5));
-        /*
-        if(instant==true &&(layout.getHeight() / 5)!=0) {
-            for (int i = 0; i < layout.getChildCount(); i++) {
-                ViewGroup.LayoutParams lp = layout.getChildAt(i).getLayoutParams();
-                lp.height = layout.getHeight() / 5;
-                layout.getChildAt(i).setLayoutParams(lp);
-                Log.i("WASD", "test" + i);
-                if (i == 4) {
-                    instant = false;
-                }
-
-            }
-        }
-        */
-        if(instant==true &&(layout.getHeight() / 5)!=0) {
             final TextToSpeech tts = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
@@ -142,10 +122,11 @@ public class PhoneNumberView extends viewabstract  {
                 }
             });
             int number = 1;
-            for (int k = 0; k < 5; k++) {
-                LinearLayout buttonLayout = new LinearLayout(getContext());
-                buttonLayout.setWeightSum(3);
 
+            for (int k = 0; k < 4; k++) {
+                LinearLayout buttonLayout = new LinearLayout(getContext());
+                buttonViewsToRemove.add(buttonLayout);
+                buttonLayout.setWeightSum(3);
                 for (int i = 0; i < 3; i++) {
                     if (number == 10) {
                         final Button button = new Button(getContext());
@@ -224,6 +205,32 @@ public class PhoneNumberView extends viewabstract  {
                 layout.addView(buttonLayout);
             }
         }
+   // }
+    /**
+     * gridView is added to the screen and buttons are added to the grid view.
+     * @param canvas
+     */
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        removeAllViews();
+        addView(gridLayout);
+        Log.i("WASD", ""+(layout.getHeight() / 5));
+        /*
+        if(instant==true &&(layout.getHeight() / 5)!=0) {
+            for (int i = 0; i < layout.getChildCount(); i++) {
+                ViewGroup.LayoutParams lp = layout.getChildAt(i).getLayoutParams();
+                lp.height = layout.getHeight() / 5;
+                layout.getChildAt(i).setLayoutParams(lp);
+                Log.i("WASD", "test" + i);
+                if (i == 4) {
+                    instant = false;
+                }
+
+            }
+        }
+        */
+
     }
 
     @Override
