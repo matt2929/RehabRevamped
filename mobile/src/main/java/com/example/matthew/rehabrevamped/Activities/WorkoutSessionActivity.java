@@ -338,7 +338,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 sampleAverage.addSmoothAverage(magDiff);
 
-                if(currentWorkout.getWorkoutName().equals("Phone Number")) {
+                if(currentWorkout.getWorkoutName().equals("Phone Number") ||currentWorkout.getWorkoutName().equals("Unlock Phone")) {
                     saveString +=
                             +hour + ":" + minute + ":" + second + ","+currentWorkout.csvFormat();
                 }
