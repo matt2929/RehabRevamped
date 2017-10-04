@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.AttributeSet;
@@ -43,6 +44,7 @@ public class PhoneNumberView extends viewabstract  {
     private String currentPhoneNumber="";
     private String  origonalPhoneNumber ="";
     private boolean lastCheck=true;
+    MediaPlayer mpl;
     int buttonLayoutID=View.generateViewId();
     //list to remove
     ArrayList<View> buttonViewsToRemove = new ArrayList<>();
@@ -82,7 +84,7 @@ public class PhoneNumberView extends viewabstract  {
         gridLayout.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
         gridLayout.setColumnCount(1);
         gridLayout.setRowCount(3);
-
+        mpl = MediaPlayer.create(getContext(), R.raw.cutbeep);
         TextView phoneNumberText = new TextView(getContext());
         phoneNumberText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 
@@ -144,7 +146,8 @@ public class PhoneNumberView extends viewabstract  {
                                     time = d;
                                 }
                                 if ((d - time) > 25 && lastCheck) {
-                                    tts.speak(z + "", TextToSpeech.QUEUE_ADD, null);
+                                    mpl.start();
+                                   // tts.speak(z + "", TextToSpeech.QUEUE_ADD, null);
                                     currentPhoneNumber = currentPhoneNumber + z;
                                     time = d;
                                     button.setBackgroundColor(Color.GREEN);
@@ -178,7 +181,9 @@ public class PhoneNumberView extends viewabstract  {
                                 time = d;
                             }
                             if ((d - time) > 25 && lastCheck) {
-                                tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
+                                //tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
+                                mpl.start();
+
                                 Log.i("WASD",""+f);
                                 currentPhoneNumber = currentPhoneNumber + f;
                                 time = d;
