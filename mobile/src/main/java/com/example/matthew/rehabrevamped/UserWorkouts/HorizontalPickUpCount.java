@@ -43,7 +43,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(2);
     long jerkStartTime = System.currentTimeMillis();
     // sound stuff
-    MediaPlayer mediaPlayer = null;
+   // MediaPlayer mediaPlayer = null;
     boolean mediaChecked = false;
 
     public HorizontalPickUpCount() {
@@ -102,10 +102,10 @@ public class HorizontalPickUpCount implements WorkoutSession{
         }
 
         if (!mediaChecked) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
+      //      mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
             mediaChecked = true;
-            mediaPlayer.start();
-            mediaPlayer.setLooping(true);
+     //       mediaPlayer.start();
+     //       mediaPlayer.setLooping(true);
         }
 
 
@@ -113,21 +113,21 @@ public class HorizontalPickUpCount implements WorkoutSession{
         boolean a = (vector>.1 || vector<-.1);
         boolean b = (gyroY>.2 || gyroY<-.2);
 
-        if((vector>.1 || vector<-.1) && (gyroY>.5 || gyroY<-.5)){
-            mediaPlayer.setVolume((float)1, (float)1);
-            if (!mediaPlayer.isPlaying()) {
-                Log.e("media", "started");
-                mediaPlayer.start();
-                mediaPlayer.setLooping(true);
-            } else {
-                Log.e("media", "continue");
-            }
-        }
-        else{
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-            }
-        }
+     //   if((vector>.1 || vector<-.1) && (gyroY>.5 || gyroY<-.5)){
+   //         mediaPlayer.setVolume((float)1, (float)1);
+     //       if (!mediaPlayer.isPlaying()) {
+            //    Log.e("media", "started");
+       //         mediaPlayer.start();
+         //       mediaPlayer.setLooping(true);
+          //  } else {
+        //        Log.e("media", "continue");
+      //      }
+       // }
+        //else{
+           // if (mediaPlayer.isPlaying()) {
+             //   mediaPlayer.pause();
+          //  }
+       // }
     }
 
 

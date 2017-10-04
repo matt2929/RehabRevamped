@@ -102,10 +102,10 @@ public class PickUpCount implements WorkoutSession {
         }
 
         if (!mediaChecked) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
-            mediaChecked = true;
-            mediaPlayer.start();
-            mediaPlayer.setLooping(true);
+           // mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
+          //  mediaChecked = true;
+           // mediaPlayer.start();
+           // mediaPlayer.setLooping(true);
         }
 
 
@@ -114,19 +114,19 @@ public class PickUpCount implements WorkoutSession {
         boolean b = (gyroX>.2 || gyroX<-.2);
 
         if((vector>.1 || vector<-.1) && (gyroX>.5 || gyroX<-.5)){
-            mediaPlayer.setVolume((float)1, (float)1);
-            if (!mediaPlayer.isPlaying()) {
-                Log.e("media", "started");
-                mediaPlayer.start();
-                mediaPlayer.setLooping(true);
-            } else {
-                Log.e("media", "continue");
-            }
+         //   mediaPlayer.setVolume((float)1, (float)1);
+         //   if (!mediaPlayer.isPlaying()) {
+           //     Log.e("media", "started");
+           //     mediaPlayer.start();
+           //     mediaPlayer.setLooping(true);
+           // } else {
+             //   Log.e("media", "continue");
+          //  }
         }
         else{
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-            }
+//            if (mediaPlayer.isPlaying()) {
+  //              mediaPlayer.pause();
+    //        }
         }
     }
 

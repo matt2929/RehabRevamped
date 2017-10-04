@@ -31,7 +31,7 @@ public class WorkoutSelectionScreenAuto extends Activity {
         String previousWorkout = "n/a";
         if (bundle != null) {
             workoutParameters = (ArrayList<WorkoutParameters>) bundle.getSerializable("wokoutParameters");
-            previousWorkout = bundle.getString("previous"); 
+            previousWorkout = bundle.getString("previous");
             Toast.makeText(getApplicationContext(), "Data Loaded", Toast.LENGTH_SHORT).show();
         }
         if (workoutParameters != null) {

@@ -90,8 +90,11 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            AutoMode = true;
+
             autoPreviousWorkout = bundle.getString("Auto");
+            if(autoPreviousWorkout!=null){
+                AutoMode = true;
+            }
             workoutParameterses = (ArrayList<WorkoutParameters>) bundle.getSerializable("wokoutParameters");
 
             Toast.makeText(getApplicationContext(), "Data Loaded", Toast.LENGTH_SHORT).show();
