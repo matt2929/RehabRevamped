@@ -2,6 +2,8 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 /**
  * Created by Matthew on 7/9/2016.
  */
@@ -43,5 +45,7 @@ public interface WorkoutSession {
      * @return
      */
     public String csvFormat();
+
+    public ArrayList<String> saveArrayData();
 
 }

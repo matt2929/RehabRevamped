@@ -13,6 +13,8 @@ import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Created by Matthew on 9/25/2016.
@@ -42,7 +44,7 @@ public class UnlockPhone implements WorkoutSession {
     private double distance=0;
     final TextToSpeech tts;
     private ArrayList<Integer> runs = new ArrayList<Integer>();
-
+    ArrayList<String> dataArray=new ArrayList<String>();
     private float GyroX;
     private float GyroY;
     private float GyroZ;
@@ -84,6 +86,7 @@ public class UnlockPhone implements WorkoutSession {
         GyroY=gyroY;
         GyroZ=gyroZ;
         baseline = getBaseline();
+        Log.i("Points",x+" "+y);
 
         distance=unlockPhoneView.getHorizontalMax();
         if(targetValue==0){
@@ -218,6 +221,13 @@ public class UnlockPhone implements WorkoutSession {
         PointF point = new PointF(x,y);
         points.add(point);
         Log.i("points",x+" "+y);
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        int second = cal.get(Calendar.SECOND);
+
+        dataArray.add( hour + ":" + minute + ":" + second + ","+x+","+y+","+GyroX+","+GyroY+","+GyroZ+";");
+        Log.i("dataArray",dataArray.toString());
     }
 
     @Override
@@ -227,15 +237,17 @@ public class UnlockPhone implements WorkoutSession {
     public int getBaseline(){
         double point1x=-1*(unlockPhoneView.getFocalPoint().x);
         double point1y= Math.pow(Math.pow(unlockPhoneView.getHorizontalMax(),2)-Math.pow(point1x,2),.5);
-        Log.i("pointsX",point1x+" "+point1y);
         double point2x=(unlockPhoneView.getFocalPoint().x);
         double point2y= Math.pow(Math.pow(unlockPhoneView.getHorizontalMax(),2)-Math.pow(point1x,2),.5);
-        Log.i("pointsY",point2x+" "+point2y);
         double angle1=(Math.atan(point1y/point1x));
         double angle2=(Math.atan(point2y/point2x));
         double angleTotal=Math.toDegrees(Math.abs(angle2-angle1));
         double arcLength=2*Math.PI*(unlockPhoneView.getHorizontalMax())*(angleTotal/360);
-        Log.i("pointsACE",+(unlockPhoneView.getHorizontalMax())+"  "+arcLength);
         return (int)arcLength;
+    }
+    @Override
+    public ArrayList<String> saveArrayData(){
+        Log.i("arrayData",dataArray.toString());
+        return dataArray;
     }
 }

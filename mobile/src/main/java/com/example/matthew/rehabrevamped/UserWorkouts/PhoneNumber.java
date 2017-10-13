@@ -182,8 +182,7 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public String sayHowToHoldCup() {
-        return "";
-        //return "Type in the phone number shown above as accurately and quickly as possible.";
+        return "Type in the phone number shown above as accurately and quickly as possible.";
     }
 
     @Override
@@ -245,13 +244,18 @@ public class PhoneNumber implements WorkoutSession{
     public String csvFormat() {
         String result="";
         if(isAction){
-            result="timeDiff:,"+data.get(0).get(lineCounter)+", isCorrect:,"+data.get(1).get(lineCounter)+";";
+            result=data.get(0).get(lineCounter)+","+data.get(1).get(lineCounter)+";";
             isAction=false;
         }
         else{
             return "no Action;";
         }
         return result;
+    }
+
+    @Override
+    public ArrayList<String> saveArrayData() {
+        return null;
     }
 
 }

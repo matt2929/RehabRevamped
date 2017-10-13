@@ -12,6 +12,7 @@ import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 
 /**
  * Created by Matthew on 7/12/2016.
@@ -144,6 +145,11 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public String csvFormat() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> saveArrayData() {
         return null;
     }
 

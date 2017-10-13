@@ -216,6 +216,11 @@ public class HorizontalPickUpCount implements WorkoutSession{
     }
 
     @Override
+    public ArrayList<String> saveArrayData() {
+        return null;
+    }
+
+    @Override
     public float[][] getHoldParamaters() {
         return new float[][]{{0.7f,.3f,-5f,9.5f ,10f ,4.5f},{1f,10f ,-7.5f ,1.5f}};
     }

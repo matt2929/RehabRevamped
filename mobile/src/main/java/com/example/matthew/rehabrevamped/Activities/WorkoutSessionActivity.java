@@ -315,6 +315,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             magZ = event.values[2];
             timeMag = event.timestamp;
         }
+
         if (workoutInProgress) {
             Calendar cal = Calendar.getInstance();
             sendWorkoutStringToWatchCount++;
@@ -329,7 +330,18 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 lastValue = accY;
 
                 currentWorkout.dataIn(accX, accY, accZ, timeAcc, gyroX, gyroY, gyroZ, timeGyro, (int) walkCount, magX, magY, magZ, timeMag, getApplicationContext());
-                saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv");
+
+                Log.i("check",""+accX+"," +accY+"," +accZ+"," +timeAcc+"," +gyroX+"," +gyroY+"," +gyroZ+"," + timeGyro+"," +  walkCount+"," + magX +"," +magY +"," +magZ+"," +timeMag);
+                if(currentWorkout.getWorkoutName().equals("Phone Number")) {
+                    saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv", "Time,duration,isCorrect");
+                }
+                else if(currentWorkout.getWorkoutName().equals("Unlock Phone")) {
+                    saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv", "Time,x,y,gyroX,gyroY,gyroZ");
+                }
+                else{
+                    saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv");
+                }
+
                 //Should App Talk?
                 if (currentWorkout.shouldISaySomething()) {
                     tts.speak(currentWorkout.whatToSay(), TextToSpeech.QUEUE_ADD, null);
@@ -360,6 +372,13 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             }
             //Save Game
             if (currentWorkout.workoutFinished()) {
+                if(currentWorkout.getWorkoutName().equals("Unlock Phone")){
+                    saveString="";
+                    for(String s:currentWorkout.saveArrayData()){
+                        saveString=saveString+s;
+                    }
+                    Log.i("saveString",saveString);
+                }
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
 
                 if(currentWorkout.getWorkoutName().equals("Phone Number")){
