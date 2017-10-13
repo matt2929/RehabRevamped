@@ -22,11 +22,15 @@ public class PhoneNumber implements WorkoutSession{
     private PhoneNumberView workoutView;
     private double lastTime= -1;
     private ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
+    private ArrayList<Boolean> click = new ArrayList<Boolean>();
+    private ArrayList<Integer> grades = new ArrayList<Integer>();
     private double origonalTime;
     private double finalTime;
     private int lineCounter=-1;
     private boolean isAction;
-
+    private int timesDone=0;
+    private int maxTimes=5;
+    private boolean isDone=false;
     /**
      * assigns the view and add Arraylists
      * @param WV
@@ -80,6 +84,7 @@ public class PhoneNumber implements WorkoutSession{
             boolean isCorrect = comparePhoneNumbers(sentPhoneNumber);
             data.get(0).add(timeDif);
             data.get(1).add(isCorrect);
+            click.add(isCorrect);
             lineCounter++;
             isAction=true;
             if(isCorrect){
@@ -89,6 +94,18 @@ public class PhoneNumber implements WorkoutSession{
                 workoutView.setResultText(currentPhoneNumber);
             }
             workoutView.setLastCheck(true);
+        }
+        if(origonalPhoneNumber.length()>10&&currentPhoneNumber.length()==origonalPhoneNumber.length()){
+            timesDone++;
+            origonalPhoneNumber=null;
+            currentPhoneNumber="";
+            workoutView.newPhoneNumber();
+            origonalPhoneNumber=workoutView.getOriginalPhoneNumber();
+            grades.add(getAccuracy());
+            click.clear();
+        }
+        if(timesDone==maxTimes){
+            isDone=true;
         }
     }
 
@@ -123,16 +140,7 @@ public class PhoneNumber implements WorkoutSession{
      */
     @Override
     public boolean workoutFinished() {
-        if(currentPhoneNumber==null ||origonalPhoneNumber==null){
-            return false;
-        }
-        else if(currentPhoneNumber.length()==origonalPhoneNumber.length()){
-
-            return true;
-        }
-        else {
-            return false;
-        }
+        return isDone;
     }
 
     @Override
@@ -180,8 +188,12 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public int getGrade() {
-        Log.i("phoneTest",""+getAccuracy());
-        return getAccuracy();
+        int grade=0;
+        for(Integer i :grades){
+            grade=grade+i;
+        }
+
+        return grade/grades.size();
     }
 
     /**
@@ -191,14 +203,13 @@ public class PhoneNumber implements WorkoutSession{
      */
     private int getAccuracy() {
         int numberOfIsCorrect = 0;
-        for(int i =0;i<data.get(1).size();i++){
-            if((Boolean) data.get(1).get(i)==true){
+        for(int i =0;i<click.size();i++){
+            if((Boolean) click.get(i)==true){
                 numberOfIsCorrect=numberOfIsCorrect+1;
             }
         }
-        Log.i("phoneTest",""+numberOfIsCorrect+" "+(data.get(1).size())+" "+(numberOfIsCorrect/(data.get(1).size())));
-        double n =(numberOfIsCorrect/(data.get(1).size()));
-        return (int)(n)*100;
+        double n =(numberOfIsCorrect*100/(click.size()));
+        return (int)(n);
     }
 
     @Override
@@ -212,7 +223,7 @@ public class PhoneNumber implements WorkoutSession{
     }
 
     private String getDuration() {
-        return ""+(finalTime-origonalTime)/1000;
+        return ""+((finalTime-origonalTime)/maxTimes)/1000;
     }
 
     @Override

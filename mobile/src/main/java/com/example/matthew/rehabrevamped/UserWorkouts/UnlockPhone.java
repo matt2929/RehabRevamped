@@ -36,7 +36,7 @@ public class UnlockPhone implements WorkoutSession {
     private int height;
     private boolean isDone=false;
     private int time=0;
-    private int maxTimes=2;
+    private int maxTimes=10;
     private  UnlockPhoneView unlockPhoneView;
     private int targetValue;
     private double distance=0;
@@ -154,7 +154,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "turn key following the line.";
+        return "turn key following the line" +maxTimes+" times.";
     }
 
     /**
