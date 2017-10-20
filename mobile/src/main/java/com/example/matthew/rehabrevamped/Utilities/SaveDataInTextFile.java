@@ -27,6 +27,7 @@ public class SaveDataInTextFile {
     File _file;
     int count = 0;
     String _name="";
+    String _title=_name+"\nTime,AccX,AccY,AccZ,AccT,GyroX,GyroY,GyroZ";
 SampleAverage sampleAverage = new SampleAverage();
     public SaveDataInTextFile(Context context, String name, String fileType) {
         _name=name;
@@ -43,6 +44,23 @@ SampleAverage sampleAverage = new SampleAverage();
         int second = cal.get(Calendar.SECOND);
 
         _fileName = WelcomeScreen.Username+"_"+name+"_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s]."+fileType;
+    }
+    public SaveDataInTextFile(Context context, String name, String fileType,String title) {
+        _name=name;
+        _context = context;
+        _title=_name+"\n"+title;
+
+        Calendar cal = Calendar.getInstance();
+
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int milli = cal.get(Calendar.MILLISECOND);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        int second = cal.get(Calendar.SECOND);
+
+        _fileName = "RehabInfo_"+name+"_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s]."+fileType;
     }
     public void saveData(String saveString,File fileParent) {
             try {
@@ -63,7 +81,7 @@ SampleAverage sampleAverage = new SampleAverage();
                         writer = new PrintWriter(new FileWriter(file, true));
                         int last = 0;
                         int count = 0;
-                        writer.print(_name+"\nTime,AccX,AccY,AccZ,AccT,GyroX,GyroY,GyroZ");
+                        writer.print(_title);
                         writer.append('\n');
                         for (int i = 0; i < string.length(); i++) {
                             if (string.charAt(i) == ';') {

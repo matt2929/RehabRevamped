@@ -8,6 +8,8 @@ import android.util.Log;
 import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 
+import java.util.ArrayList;
+
 /**
  * Created by Matthew on 8/10/2016.
  */
@@ -153,6 +155,11 @@ public class PourCup implements WorkoutSession {
 
     @Override
     public String csvFormat() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> saveArrayData() {
         return null;
     }
 

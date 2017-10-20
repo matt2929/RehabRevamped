@@ -13,6 +13,8 @@ import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Created by Matthew on 9/25/2016.
@@ -32,16 +34,22 @@ public class UnlockPhone implements WorkoutSession {
     boolean firstTime = true;
     long startTime = System.currentTimeMillis();
 
-    ArrayList<PointF> points = new ArrayList<PointF>();
-    int height;
-    boolean isDone=false;
-    int time=0;
-    int maxTimes=2;
-    UnlockPhoneView unlockPhoneView;
-    int targetValue;
-    double distance=0;
+    private  ArrayList<PointF> points = new ArrayList<PointF>();
+    private int height;
+    private boolean isDone=false;
+    private int time=0;
+    private int maxTimes=10;
+    private  UnlockPhoneView unlockPhoneView;
+    private int targetValue;
+    private double distance=0;
     final TextToSpeech tts;
-    ArrayList<Integer> runs = new ArrayList<Integer>();
+    private ArrayList<Integer> runs = new ArrayList<Integer>();
+    ArrayList<String> dataArray=new ArrayList<String>();
+    private float GyroX;
+    private float GyroY;
+    private float GyroZ;
+    private int baseline;
+
     public UnlockPhone(UnlockPhoneView UPV){
         unlockPhoneView=UPV;
         targetValue=0;
@@ -74,18 +82,22 @@ public class UnlockPhone implements WorkoutSession {
      */
     @Override
     public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
-        Log.i("unlockTest1",x+" "+targetValue);
-        Log.i("unlockTest1",""+Math.sqrt(Math.pow(x,2)+Math.pow(y,2)));
+        GyroX=gyroX;
+        GyroY=gyroY;
+        GyroZ=gyroZ;
+        baseline = getBaseline();
+        Log.i("Points",x+" "+y);
+
         distance=unlockPhoneView.getHorizontalMax();
         if(targetValue==0){
-            targetValue=(unlockPhoneView.getFocalPoint().x)-10;
+            targetValue=(unlockPhoneView.getFocalPoint().x)-25;
         }
-        if (targetValue<10){
+        if (targetValue<25){
             if(x<=targetValue){
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
-                targetValue=(unlockPhoneView.getFocalPoint().x)-10;
-                runs.add(analyzeRun());
+                targetValue=(unlockPhoneView.getFocalPoint().x)-25;
+                runs.add(analyzeRun()-baseline);
                 points.clear();
             }
         }
@@ -93,7 +105,7 @@ public class UnlockPhone implements WorkoutSession {
             if(x>=targetValue){
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
-                targetValue=-(unlockPhoneView.getFocalPoint().x)+10;
+                targetValue=-(unlockPhoneView.getFocalPoint().x)+25;
                 runs.add(analyzeRun());
                 points.clear();
             }
@@ -101,39 +113,6 @@ public class UnlockPhone implements WorkoutSession {
         if(time==maxTimes){
             isDone=true;
         }
-        /*
-        if (firstTime) {
-            float width = WorkoutSessionActivity.width;
-            for (int i = 0; i < checkpointsNum.length - 1; i++) {
-                checkpointsCheck[i] = false;
-                checkpointsNum[i] = (width * (i / 10f));
-                Log.e("checkpoint", "" + checkpointsNum[i]);
-
-            }
-            if (WorkoutSessionActivity.width != 0) {
-                firstTime = false;
-            }
-        } else {
-            for (int i = 0; i < checkpointsNum.length - 1; i++) {
-                if (x < checkpointsNum[i + 1] && x > checkpointsNum[i]) {
-                     if (checkpointsCheck[i] == false) {
-                         Log.e("it happened","i:"+i+": "+checkpointsCheck[i]);
-                         checkpointsCheck[i] = true;
-
-                         countChecks++;
-                    }
-                   }
-            }
-            if (countChecks == 8) {
-                count++;
-                countChecks = 0;
-                for (int i = 0; i < checkpointsNum.length; i++) {
-                    checkpointsCheck[i] = false;
-                }
-            }
-              Log.e("count: ", ""+countChecks+" x:"+x+" y:"+y);
-        }
-        */
     }
 
     @Override
@@ -178,7 +157,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "turn key following the line.";
+        return "turn key following the line" +maxTimes+" times.";
     }
 
     /**
@@ -202,18 +181,17 @@ public class UnlockPhone implements WorkoutSession {
      */
     public int analyzeRun(){
         ArrayList<Double> acc = new ArrayList<Double>();
-        for(PointF p:points){
-            double r = Math.sqrt(Math.pow(p.x,2)+Math.pow(p.y,2));
-            double angle = 1/(Math.tan(p.y/p.x));
-            acc.add(r-distance);
-            Log.i("unlockTest",""+(r-distance));
+        //get abs of pos change add togeter
+        double totalDistance=0;
+        for(int i =1;i<points.size();i++){
+
+            double tempDistance = Math.pow(Math.pow(points.get(i).x-points.get(i-1).x,2)+Math.pow(points.get(i).y-points.get(i-1).y,2),.5);
+            totalDistance=tempDistance+totalDistance;
+            Log.i("PointsZ1",""+(points.get(i).x-points.get(i-1).x));
+            Log.i("PointsZ2",""+(points.get(i).y-points.get(i-1).y));
         }
-        double total=0;
-        for(Double d:acc){
-            total=total+d;
-        }
-        double res=total/(acc.size());
-        return (int)res;
+        Log.i("Points",totalDistance+"");
+        return (int)totalDistance;
     }
 
     @Override
@@ -242,10 +220,34 @@ public class UnlockPhone implements WorkoutSession {
         y = unlockPhoneView.getFocalPoint().y-Y;
         PointF point = new PointF(x,y);
         points.add(point);
+        Log.i("points",x+" "+y);
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        int second = cal.get(Calendar.SECOND);
+
+        dataArray.add( hour + ":" + minute + ":" + second + ","+x+","+y+","+GyroX+","+GyroY+","+GyroZ+";");
+        Log.i("dataArray",dataArray.toString());
     }
 
     @Override
     public String csvFormat() {
-        return (x+", "+y+";");
+        return (x+", "+y+", "+GyroX+", "+GyroY+", "+GyroZ+";");
+    }
+    public int getBaseline(){
+        double point1x=-1*(unlockPhoneView.getFocalPoint().x);
+        double point1y= Math.pow(Math.pow(unlockPhoneView.getHorizontalMax(),2)-Math.pow(point1x,2),.5);
+        double point2x=(unlockPhoneView.getFocalPoint().x);
+        double point2y= Math.pow(Math.pow(unlockPhoneView.getHorizontalMax(),2)-Math.pow(point1x,2),.5);
+        double angle1=(Math.atan(point1y/point1x));
+        double angle2=(Math.atan(point2y/point2x));
+        double angleTotal=Math.toDegrees(Math.abs(angle2-angle1));
+        double arcLength=2*Math.PI*(unlockPhoneView.getHorizontalMax())*(angleTotal/360);
+        return (int)arcLength;
+    }
+    @Override
+    public ArrayList<String> saveArrayData(){
+        Log.i("arrayData",dataArray.toString());
+        return dataArray;
     }
 }

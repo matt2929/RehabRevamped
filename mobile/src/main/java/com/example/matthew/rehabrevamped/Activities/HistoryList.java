@@ -18,6 +18,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class HistoryList extends Activity {
@@ -52,7 +53,7 @@ public class HistoryList extends Activity {
                     && !WorkoutStrings.contains("\nWorkout Name: " + s.getWorkoutName() + "\nHAND: <Right>")) {
                 ArrayList<Object> set = new ArrayList<Object>();
                 set.add(s.getWorkoutName());
-                ArrayList<Object> graphPoints = addPoints(s.getWorkoutName());
+                ArrayList<Object> graphPoints= addPoints(s.getWorkoutName());
                 set.addAll(graphPoints);
                 data.add(set);
             }
@@ -110,7 +111,7 @@ public class HistoryList extends Activity {
             //
             float start = 0;
 
-            for (int i = 0; i < sessions.size(); i++) {
+            for (int i = sessions.size()-1; i >= 0; i=i-1) {
                 start = (float) sessions.get(i);
                 dataPoint[i] = new DataPoint(i, start);
             }

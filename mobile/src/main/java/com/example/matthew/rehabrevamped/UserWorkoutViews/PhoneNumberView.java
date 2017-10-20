@@ -1,6 +1,7 @@
 package com.example.matthew.rehabrevamped.UserWorkoutViews;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -46,6 +47,7 @@ public class PhoneNumberView extends viewabstract  {
     private boolean lastCheck=true;
     MediaPlayer mpl;
     int buttonLayoutID=View.generateViewId();
+    private TextView phoneNumberText;
     //list to remove
     ArrayList<View> buttonViewsToRemove = new ArrayList<>();
 
@@ -85,17 +87,15 @@ public class PhoneNumberView extends viewabstract  {
         gridLayout.setColumnCount(1);
         gridLayout.setRowCount(3);
         mpl = MediaPlayer.create(getContext(), R.raw.cutbeep);
-        TextView phoneNumberText = new TextView(getContext());
+        phoneNumberText = new TextView(getContext());
         phoneNumberText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 
-        origonalPhoneNumber=createPhoneNumber();
-        phoneNumberText.setText(origonalPhoneNumber);
         phoneNumberText.setTextSize(40);
         phoneNumberText.setTextColor(Color.WHITE);
 
         phoneNumberText.setGravity(Gravity.CENTER);
 
-
+        phoneNumberText.setText(createPhoneNumber());
         //center
 
         resultText.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
@@ -183,8 +183,6 @@ public class PhoneNumberView extends viewabstract  {
                             if ((d - time) > 25 && lastCheck) {
                                 //tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
                                 mpl.start();
-
-                                Log.i("WASD",""+f);
                                 currentPhoneNumber = currentPhoneNumber + f;
                                 time = d;
                                 button.setBackgroundColor(Color.GREEN);
@@ -219,9 +217,10 @@ public class PhoneNumberView extends viewabstract  {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         removeAllViews();
+
         addView(gridLayout);
-        Log.i("WASD", ""+(layout.getHeight() / 5));
-        /*
+
+       /*
         if(instant==true &&(layout.getHeight() / 5)!=0) {
             for (int i = 0; i < layout.getChildCount(); i++) {
                 ViewGroup.LayoutParams lp = layout.getChildAt(i).getLayoutParams();
@@ -229,7 +228,7 @@ public class PhoneNumberView extends viewabstract  {
                 layout.getChildAt(i).setLayoutParams(lp);
                 Log.i("WASD", "test" + i);
                 if (i == 4) {
-                    instant = false;
+                    instant = false;LayoutParams.MATCH_PARENT
                 }
 
             }
@@ -286,9 +285,25 @@ public class PhoneNumberView extends viewabstract  {
         }
         // DecimalFormat formatter = new DecimalFormat("#,###,###,####");
         // S = formatter.format((Object)S);
+        origonalPhoneNumber=S;
         return S;
+    }
+    public void newPhoneNumber(){
+        createPhoneNumber();
+        currentPhoneNumber="";
+        phoneNumberText.setText(origonalPhoneNumber);
+        resultText.setText("");
+        Log.i("phonetest", origonalPhoneNumber);
     }
     public void setLastCheck(boolean b){
         lastCheck=b;
+    }
+    public int actionBarSize(){
+        Resources resources = getContext().getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 }
