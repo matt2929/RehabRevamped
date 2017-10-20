@@ -3,6 +3,8 @@ package com.example.matthew.rehabrevamped.Utilities;
 import android.content.Context;
 import android.os.Environment;
 
+import com.example.matthew.rehabrevamped.Activities.WelcomeScreen;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +42,7 @@ SampleAverage sampleAverage = new SampleAverage();
         int minute = cal.get(Calendar.MINUTE);
         int second = cal.get(Calendar.SECOND);
 
-        _fileName = "RehabInfo_"+name+"_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s]."+fileType;
+        _fileName = WelcomeScreen.Username+"_"+name+"_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s]."+fileType;
     }
     public void saveData(String saveString,File fileParent) {
             try {
