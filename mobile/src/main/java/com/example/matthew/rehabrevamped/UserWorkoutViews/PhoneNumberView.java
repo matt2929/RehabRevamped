@@ -180,7 +180,7 @@ public class PhoneNumberView extends viewabstract  {
                             if (time < 0) {
                                 time = d;
                             }
-                            if ((d - time) > 25 && lastCheck) {
+                            if ((d - time) > 10 && lastCheck) {
                                 //tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
                                 mpl.start();
                                 currentPhoneNumber = currentPhoneNumber + f;
@@ -192,7 +192,7 @@ public class PhoneNumberView extends viewabstract  {
                                     public void run() {
                                         button.setBackgroundColor(Color.GRAY);
                                     }
-                                }, 25);
+                                }, 10);
                                 lastCheck=false;
                             }
                             return false;
@@ -217,7 +217,6 @@ public class PhoneNumberView extends viewabstract  {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         removeAllViews();
-
         addView(gridLayout);
 
        /*

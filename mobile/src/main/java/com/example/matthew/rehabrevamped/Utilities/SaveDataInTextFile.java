@@ -60,7 +60,7 @@ SampleAverage sampleAverage = new SampleAverage();
         int minute = cal.get(Calendar.MINUTE);
         int second = cal.get(Calendar.SECOND);
 
-        _fileName = "RehabInfo_"+name+"_"+(month + 1)+"-"+day+"-"+year+"_["+hour+"h~"+minute+"m~"+second+"s]."+fileType;
+        _fileName = WelcomeScreen.Username + "_" + name + "_" + (month + 1) + "-" + day + "-" + year + "_[" + hour + "h~" + minute + "m~" + second + "s]." + fileType;
     }
     public void saveData(String saveString,File fileParent) {
             try {
@@ -69,7 +69,7 @@ SampleAverage sampleAverage = new SampleAverage();
                 string += load();
                 string += saveString;
 
-                outputStream = _context.openFileOutput(_fileName, Context.MODE_WORLD_READABLE);
+                outputStream = _context.openFileOutput(_fileName, Context.MODE_PRIVATE);
                 outputStream.write(string.getBytes());
                 outputStream.close();
                 File file = new File(fileParent, _fileName);

@@ -31,6 +31,7 @@ public class PhoneNumber implements WorkoutSession{
     private int timesDone=0;
     private int maxTimes=5;
     private boolean isDone=false;
+    private boolean goodClick = false;
     /**
      * assigns the view and add Arraylists
      * @param WV
@@ -126,12 +127,7 @@ public class PhoneNumber implements WorkoutSession{
             origonalValueToCompare = origonalPhoneNumber.substring(sentPhoneNumber.length()-n,sentPhoneNumber.length());
             currentValueToCompare = sentPhoneNumber.substring(sentPhoneNumber.length()-n);
         }
-        if(currentValueToCompare.equals(origonalValueToCompare)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return currentValueToCompare.equals(origonalValueToCompare);
     }
 
     /**
@@ -203,7 +199,7 @@ public class PhoneNumber implements WorkoutSession{
     private int getAccuracy() {
         int numberOfIsCorrect = 0;
         for(int i =0;i<click.size();i++){
-            if((Boolean) click.get(i)==true){
+            if (click.get(i) == true) {
                 numberOfIsCorrect=numberOfIsCorrect+1;
             }
         }

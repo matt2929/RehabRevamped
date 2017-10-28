@@ -63,7 +63,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private float accX = 0, accY = 0, accZ = 0;
     private float gyroX = 0, gyroY = 0, gyroZ = 0;
     private float gravX = 0, gravY = 0, gravZ = 0;
-    private float magX = 0, magY = 0, magZ = 0;
+    //private float magX = 0, magY = 0, magZ = 0;
     private long timeAcc = 0, timeGyro = 0, timeMag = 0;
     private Sensor mAcc, mGyro, mStep, mGrav, mMag;
     AudioManager mgr = null;
@@ -82,9 +82,10 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     boolean noConformation = true;
     boolean hand;
     boolean AutoMode = false;
-    String autoPreviousWorkout="";
+    String autoPreviousWorkout = "";
     protected PowerManager.WakeLock mWakeLock;
     ArrayList<WorkoutParameters> workoutParameterses;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +93,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         if (bundle != null) {
 
             autoPreviousWorkout = bundle.getString("Auto");
-            if(autoPreviousWorkout!=null){
+            if (autoPreviousWorkout != null) {
                 AutoMode = true;
             }
             workoutParameterses = (ArrayList<WorkoutParameters>) bundle.getSerializable("wokoutParameters");
@@ -142,7 +143,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
             }
         });
-        mSensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         if (!AutoMode) {
             currentWorkout = WorkoutSelectionScreenManual.CurrentWorkout;
@@ -165,10 +166,10 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             mGrav = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
             mSensorManager.registerListener(this, mGrav, Sensor.TYPE_GRAVITY);
         }
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
+       /* if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
             mMag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
             mSensorManager.registerListener(this, mMag, Sensor.TYPE_MAGNETIC_FIELD);
-        }
+        }*/
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -261,16 +262,16 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
         boolean leftHand = false;
-        if(AutoMode){
+        if (AutoMode) {
 
-        }else{
-           leftHand = WorkoutSelectionScreenManual.isLeftHand;
+        } else {
+            leftHand = WorkoutSelectionScreenManual.isLeftHand;
         }
         if (noConformation == true) {
-                    int left = 0;
-                    if (leftHand) {
-                        sendAMessageToWatch(
-                                "Start," + currentWorkout.getHoldParamaters()[left][0]
+            int left = 0;
+            if (leftHand) {
+                sendAMessageToWatch(
+                        "Start," + currentWorkout.getHoldParamaters()[left][0]
                                 + "," + currentWorkout.getHoldParamaters()[left][1]
                                 + "," + currentWorkout.getHoldParamaters()[left][2]
                                 + "," + currentWorkout.getHoldParamaters()[left][3]
@@ -309,12 +310,12 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             gravX = event.values[0];
             gravY = event.values[1];
             gravZ = event.values[2];
-        } else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+        } /*else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             magX = event.values[0];
             magY = event.values[1];
             magZ = event.values[2];
             timeMag = event.timestamp;
-        }
+        }*/
 
         if (workoutInProgress) {
             Calendar cal = Calendar.getInstance();
@@ -325,20 +326,17 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 int hour = cal.get(Calendar.HOUR_OF_DAY);
                 int minute = cal.get(Calendar.MINUTE);
                 int second = cal.get(Calendar.SECOND);
+                int milli = cal.get(Calendar.MILLISECOND);
                 float magval = (float) Math.pow(Math.pow(accX, 2) + Math.pow(accY, 2) + Math.pow(accZ, 2), .5);
                 float magDiff = Math.abs(accY - lastValue);
                 lastValue = accY;
 
-                currentWorkout.dataIn(accX, accY, accZ, timeAcc, gyroX, gyroY, gyroZ, timeGyro, (int) walkCount, magX, magY, magZ, timeMag, getApplicationContext());
-
-                Log.i("check",""+accX+"," +accY+"," +accZ+"," +timeAcc+"," +gyroX+"," +gyroY+"," +gyroZ+"," + timeGyro+"," +  walkCount+"," + magX +"," +magY +"," +magZ+"," +timeMag);
-                if(currentWorkout.getWorkoutName().equals("Phone Number")) {
+                currentWorkout.dataIn(accX, accY, accZ, timeAcc, gyroX, gyroY, gyroZ, timeGyro, (int) walkCount, 0, 0, 0, 0, getApplicationContext());
+                if (currentWorkout.getWorkoutName().equals("Phone Number")) {
                     saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv", "Time,duration,isCorrect");
-                }
-                else if(currentWorkout.getWorkoutName().equals("Unlock Phone")) {
+                } else if (currentWorkout.getWorkoutName().equals("Unlock Phone")) {
                     saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv", "Time,x,y,gyroX,gyroY,gyroZ");
-                }
-                else{
+                } else {
                     saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv");
                 }
 
@@ -350,14 +348,13 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 sampleAverage.addSmoothAverage(magDiff);
 
-                if(currentWorkout.getWorkoutName().equals("Phone Number") ||currentWorkout.getWorkoutName().equals("Unlock Phone")) {
+                if (currentWorkout.getWorkoutName().equals("Phone Number") || currentWorkout.getWorkoutName().equals("Unlock Phone")) {
                     saveString +=
-                            +hour + ":" + minute + ":" + second + ","+currentWorkout.csvFormat();
-                }
-                else{
+                            +hour + "h" + minute + "m" + second + "s" + milli + "ms" + currentWorkout.csvFormat();
+                } else {
                     saveString +=
-                            +hour + ":" + minute + ":" + second
-                                    + "," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
+                            +hour + "h" + minute + "m" + second
+                                    + "s" + milli + "ms" + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
                                     + gyroX + "," + gyroY + "," + gyroZ + ";";
                 }
                 if (currentWorkout.dataOut() != null) {
@@ -372,27 +369,26 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             }
             //Save Game
             if (currentWorkout.workoutFinished()) {
-                if(currentWorkout.getWorkoutName().equals("Unlock Phone")){
-                    saveString="";
-                    for(String s:currentWorkout.saveArrayData()){
-                        saveString=saveString+s;
+                if (currentWorkout.getWorkoutName().equals("Unlock Phone")) {
+                    saveString = "";
+                    for (String s : currentWorkout.saveArrayData()) {
+                        saveString = saveString + s;
                     }
-                    Log.i("saveString",saveString);
+                    Log.i("saveString", saveString);
                 }
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
 
-                if(currentWorkout.getWorkoutName().equals("Phone Number")){
-                    tts.speak("Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%", TextToSpeech.QUEUE_ADD, null);
+                if (currentWorkout.getWorkoutName().equals("Phone Number")) {
+                    tts.speak("Duration:" + currentWorkout.stringOut() + " seconds, score:" + currentWorkout.getGrade() + "%", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(),
-                            "Duration:" +currentWorkout.stringOut()+" seconds, score:"+ currentWorkout.getGrade()+"%",
+                            "Duration:" + currentWorkout.stringOut() + " seconds, score:" + currentWorkout.getGrade() + "%",
                             Toast.LENGTH_LONG).show();
-                }
-                else {
-                    tts.speak(currentWorkout.getGrade()+"", TextToSpeech.QUEUE_ADD, null);
+                } else {
+                    tts.speak(currentWorkout.getGrade() + "", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
                 }
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"RehabRevamped");
-                if(!file.exists()){
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "RehabRevamped");
+                if (!file.exists()) {
                     file.mkdir();
                 }
                 saveDataInTextFile.saveData(saveString, file);
@@ -448,12 +444,12 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 } else {
                     serializeWorkoutData.Save(getApplicationContext(), currentWorkout.getWorkoutName(), currentWorkout.getGrade(), currentWorkout.getGrade(), false, currentWorkout.saveData());
                 }
-                Intent intent=null;
+                Intent intent = null;
                 if (!AutoMode) {
                     intent = new Intent(getApplicationContext(), WorkoutOrHistory.class);
                 } else {
                     intent = new Intent(getApplicationContext(), WorkoutSelectionScreenAuto.class);
-                    intent.putExtra("previous",autoPreviousWorkout);
+                    intent.putExtra("previous", autoPreviousWorkout);
                     intent.putExtra("wokoutParameters", workoutParameterses);
                 }
                 startActivity(intent);

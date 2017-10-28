@@ -99,6 +99,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@android:color/holo_purple"
                 android:text="@string/walk_with_phone" />
+
             <Button
                 android:id="@+id/unlockchoice"
                 android:layout_width="wrap_content"
@@ -110,7 +111,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/holo_blue_dark"
+                android:background="@android:color/holo_red_dark"
                 android:text="@string/key_unlock" />
 
             <Button
