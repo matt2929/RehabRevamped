@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class WorkoutSelectionScreenManual extends Activity {
     ArrayList<View> pickHandView = new ArrayList<>();
     ArrayList<View> selectWorkoutView = new ArrayList<>();
-    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt,unlockButt, leftHand, rightHand,walkButt;
+    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt,unlockButt, leftHand, rightHand,walkButt,pourLiquid;
     View fakeView;
     static com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession CurrentWorkout;
     static viewabstract CurrentWorkoutView;
@@ -50,13 +50,11 @@ public class WorkoutSelectionScreenManual extends Activity {
         walkButt = (Button) findViewById(R.id.walkchoice);
         unlockButt = (Button) findViewById(R.id.unlockchoice);
         fakeView = (View) findViewById(R.id.fakeView);
-
-        //
-
+        pourLiquid = (Button) findViewById(R.id.PourSelect);
         pickHandView.add(fakeView);
         pickHandView.add(leftHand);
         pickHandView.add(rightHand);
-
+        selectWorkoutView.add(pourLiquid);
         selectWorkoutView.add(pickUpButt);
         selectWorkoutView.add(horPickUpButt);
         selectWorkoutView.add(twistButt);
@@ -107,6 +105,19 @@ public class WorkoutSelectionScreenManual extends Activity {
                     }
                 }).start();
                 CurrentWorkoutView = new HorizontalPickUpCountView(getApplicationContext());
+            }
+        });
+        pourLiquid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewHandSelection();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new PourCup();
+                    }
+                }).start();
+                CurrentWorkoutView = new PourCupView(getApplicationContext());
             }
         });
         twistButt.setOnClickListener(new View.OnClickListener() {

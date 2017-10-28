@@ -43,7 +43,7 @@
                 android:layout_alignWithParentIfMissing="false"
                 android:layout_margin="20dp"
                 android:background="@android:color/holo_blue_bright"
-                android:text="Verticle Pick Up Cup" />
+                android:text="@string/verticle_pick_up_cup" />
 
             <Button
                 android:id="@+id/horizontalpickupcupchoice"
@@ -57,7 +57,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/holo_orange_light"
-                android:text="Horizontal Pick Up Cup" />
+                android:text="@string/horizontal_pick_up_cup" />
 
             <Button
                 android:id="@+id/twistcupchoice"
@@ -71,7 +71,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/holo_green_light"
-                android:text="Twist Cup" />
+                android:text="@string/twist_cup" />
             <Button
                 android:id="@+id/phonenumberchoice"
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/holo_green_dark"
-                android:text="Phone Number" />
+                android:text="@string/phone_number" />
 
             <Button
                 android:id="@+id/walkchoice"
@@ -98,7 +98,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/holo_purple"
-                android:text="Walk With Phone" />
+                android:text="@string/walk_with_phone" />
             <Button
                 android:id="@+id/unlockchoice"
                 android:layout_width="wrap_content"
@@ -111,7 +111,23 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/holo_blue_dark"
-                android:text="key unlock" />
+                android:text="@string/key_unlock" />
+
+            <Button
+                android:id="@+id/PourSelect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/unlockchoice"
+                android:layout_margin="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/pour"
+                android:background="@android:color/holo_blue_dark"
+                />
+
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
@@ -119,7 +135,7 @@
 
                 android:layout_marginTop="20dp"
                 android:background="?android:attr/colorPressedHighlight"
-                android:text="Button"
+                android:text="@string/button"
                 android:visibility="invisible" />
 
             <View
@@ -137,7 +153,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:fontFamily="sans-serif"
-                android:text="Right Hand"
+                android:text="@string/right_hand"
                 android:textSize="36sp" />
 
             <Button
@@ -149,7 +165,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:fontFamily="sans-serif"
-                android:text="Left Hand"
+                android:text="@string/left_hand"
                 android:textSize="36sp" />
 
             />

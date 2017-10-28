@@ -2,4 +2,14 @@
     <string name="app_name">RehabRevamped</string>
     <string name="red_line">The red line represents the expected jerk score</string>
     <string name="blue_line">The blue line represents the average jerk score</string>
+    <string name="left_hand">Left Hand</string>
+    <string name="right_hand">Right Hand</string>
+    <string name="button">Button</string>
+    <string name="pour">Pour</string>
+    <string name="key_unlock">key unlock</string>
+    <string name="walk_with_phone">Walk With Phone</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="twist_cup">Twist Cup</string>
+    <string name="verticle_pick_up_cup">Verticle Pick Up Cup</string>
+    <string name="horizontal_pick_up_cup">Horizontal Pick Up Cup</string>
 </resources>
