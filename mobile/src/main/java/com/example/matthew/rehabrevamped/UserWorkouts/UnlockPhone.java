@@ -90,22 +90,22 @@ public class UnlockPhone implements WorkoutSession {
 
         distance=unlockPhoneView.getHorizontalMax();
         if(targetValue==0){
-            targetValue=(unlockPhoneView.getFocalPoint().x)-buffer;
+            targetValue = (unlockPhoneView.getFocalPoint().x) - buffer;
         }
-        if (targetValue<buffer){
-            if(x<=targetValue+buffer){
+        if (targetValue < buffer) {
+            if (x <= targetValue + buffer) {
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
-                targetValue=(unlockPhoneView.getFocalPoint().x)-buffer;
+                targetValue = (unlockPhoneView.getFocalPoint().x) - buffer;
                 runs.add(analyzeRun()-baseline);
                 points.clear();
             }
         }
         else{
-            if(x>=targetValue-buffer){
+            if (x >= targetValue - buffer) {
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
-                targetValue=-(unlockPhoneView.getFocalPoint().x)+buffer;
+                targetValue = -(unlockPhoneView.getFocalPoint().x) + buffer;
                 runs.add(analyzeRun());
                 points.clear();
             }

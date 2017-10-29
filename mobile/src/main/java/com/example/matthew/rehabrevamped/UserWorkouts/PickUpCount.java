@@ -88,7 +88,7 @@ public class PickUpCount implements WorkoutSession {
         holdAccuracy(accX, accY, accZ);
         long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
         Log.i("TTTT",""+sampleAverage.getMedianAverage());
-        if (sampleAverage.getMedianAverage() < .03 && differenceTime > 1000 && inMotion) {
+        if (sampleAverage.getMedianAverage() < .035 && differenceTime > 1000 && inMotion) {
             startTime.setToNow();
             shouldITalk = true;
             pickupCount++;
@@ -150,10 +150,7 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public boolean workoutFinished() {
-        if (pickupCount == getPickupCountMax) {
-            return true;
-        }
-        return false;
+        return pickupCount == getPickupCountMax;
     }
 
     @Override

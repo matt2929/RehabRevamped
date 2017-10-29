@@ -353,11 +353,11 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 if (currentWorkout.getWorkoutName().equals("Phone Number") || currentWorkout.getWorkoutName().equals("Unlock Phone")) {
                     saveString +=
-                            +hour + "h" + minute + "m" + second + "s" + milli + "ms" + currentWorkout.csvFormat();
+                            +hour + "h" + minute + "m" + second + "s" + milli + "ms," + currentWorkout.csvFormat();
                 } else {
                     saveString +=
                             +hour + "h" + minute + "m" + second
-                                    + "s" + milli + "ms" + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
+                                    + "s" + milli + "ms," + accX + "," + accY + "," + accZ + "," + sampleAverage.getMedianAverage() + ","
                                     + gyroX + "," + gyroY + "," + gyroZ + ";";
                 }
                 if (currentWorkout.dataOut() != null) {

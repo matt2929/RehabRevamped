@@ -240,7 +240,7 @@ public class PhoneNumber implements WorkoutSession{
     public String csvFormat() {
         String result="";
         if(isAction){
-            result=data.get(0).get(lineCounter)+","+data.get(1).get(lineCounter)+";";
+            result = "," + data.get(0).get(lineCounter) + "," + data.get(1).get(lineCounter) + ";";
             isAction=false;
         }
         else{
