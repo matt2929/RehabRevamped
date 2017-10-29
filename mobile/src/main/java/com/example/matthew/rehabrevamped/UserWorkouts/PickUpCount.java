@@ -39,6 +39,10 @@ public class PickUpCount implements WorkoutSession {
     boolean hasStarted = false;
     long startOfWorkoutForGrade = System.currentTimeMillis();
 
+    long inMotionTimer=0;
+    long inMotionTimerStartPoint=0;
+    int sampleAverageTicker;
+
     //Jerk Stuff
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(2);
     long jerkStartTime = System.currentTimeMillis();
@@ -73,32 +77,53 @@ public class PickUpCount implements WorkoutSession {
      * @param context
      */
     public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
-
         if(inMotion == false){
             jerkStartTime = System.currentTimeMillis();
         }else {
-           jerkScoreAnalysis.jerkAdd(accX, accY, accZ, accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
+            jerkScoreAnalysis.jerkAdd(accX, accY, accZ, accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
         }
         float differenceVAL = Math.abs(accY - countPickupLastVal);
         a = differenceVAL;
         countPickupLastVal = accY;
-        sampleAverage.addSmoothAverage(differenceVAL);
+        if(sampleAverageTicker>10) {
+            sampleAverage.addSmoothAverage(differenceVAL);
+        }
+        else{
+            sampleAverageTicker++;
+        }
         Time nowTime = new Time();
         nowTime.setToNow();
         holdAccuracy(accX, accY, accZ);
+
         long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
-        Log.i("TTTT",""+sampleAverage.getMedianAverage());
-        if (sampleAverage.getMedianAverage() < .035 && differenceTime > 1000 && inMotion) {
-            startTime.setToNow();
-            shouldITalk = true;
-            pickupCount++;
-            whatToSay = "" + pickupCount;
-            jerkScoreAnalysis.jerkCompute(Math.abs(System.currentTimeMillis() - jerkStartTime));
-            jerkStartTime = System.currentTimeMillis();
-            inMotion = false;
-            imOnLowerSurface = !imOnLowerSurface;
+        Log.i("average1",sampleAverage.getMedianAverage()+" "+differenceTime+" "+inMotion);
+        if (sampleAverage.getMedianAverage() < .03 && differenceTime > 1000 && inMotion) {
+            //inMotion=false;
+
+            if(inMotionTimerStartPoint<.00001){
+                inMotionTimerStartPoint = System.currentTimeMillis();
+            }
+            inMotionTimer=System.currentTimeMillis()-inMotionTimerStartPoint;
+            Log.i("inMotionTimer", inMotionTimer+"");
+            if(inMotionTimer>1000) {
+                startTime.setToNow();
+                shouldITalk = true;
+                pickupCount++;
+                whatToSay = "" + pickupCount;
+                jerkScoreAnalysis.jerkCompute(Math.abs(System.currentTimeMillis() - jerkStartTime));
+                jerkStartTime = System.currentTimeMillis();
+                inMotion = false;
+                imOnLowerSurface = !imOnLowerSurface;
+                inMotionTimer=0;
+                inMotionTimerStartPoint=0;
+            }
         } else if (sampleAverage.getMedianAverage() > .35 && !inMotion) {
             inMotion = true;
+            inMotionTimer=0;
+            inMotionTimerStartPoint=0;
+        } else{
+            inMotionTimer=0;
+            inMotionTimerStartPoint=0;
         }
 
         if (!mediaChecked) {
@@ -150,7 +175,10 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public boolean workoutFinished() {
-        return pickupCount == getPickupCountMax;
+        if (pickupCount == getPickupCountMax) {
+            return true;
+        }
+        return false;
     }
 
     @Override
