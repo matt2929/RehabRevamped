@@ -33,7 +33,7 @@ public class UnlockPhone implements WorkoutSession {
     float[] checkpointsNum = new float[11];
     boolean firstTime = true;
     long startTime = System.currentTimeMillis();
-
+    private String name = "";
     private  ArrayList<PointF> points = new ArrayList<PointF>();
     private int height;
     private boolean isDone=false;
@@ -152,7 +152,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String getWorkoutName() {
-        return "Unlock Phone";
+        return name;
     }
 
     @Override
@@ -228,6 +228,10 @@ public class UnlockPhone implements WorkoutSession {
 
         dataArray.add( hour + ":" + minute + ":" + second + ","+x+","+y+","+GyroX+","+GyroY+","+GyroZ+";");
         Log.i("dataArray",dataArray.toString());
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

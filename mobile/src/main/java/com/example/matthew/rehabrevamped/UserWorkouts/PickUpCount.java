@@ -39,8 +39,8 @@ public class PickUpCount implements WorkoutSession {
     boolean hasStarted = false;
     long startOfWorkoutForGrade = System.currentTimeMillis();
 
-    long inMotionTimer=0;
-    long inMotionTimerStartPoint=0;
+    long inMotionTimer = 0;
+    long inMotionTimerStartPoint = 0;
     int sampleAverageTicker;
 
     //Jerk Stuff
@@ -85,10 +85,9 @@ public class PickUpCount implements WorkoutSession {
         float differenceVAL = Math.abs(accY - countPickupLastVal);
         a = differenceVAL;
         countPickupLastVal = accY;
-        if(sampleAverageTicker>10) {
+        if (sampleAverageTicker > 10) {
             sampleAverage.addSmoothAverage(differenceVAL);
-        }
-        else{
+        } else {
             sampleAverageTicker++;
         }
         Time nowTime = new Time();
@@ -96,16 +95,16 @@ public class PickUpCount implements WorkoutSession {
         holdAccuracy(accX, accY, accZ);
 
         long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
-        Log.i("average1",sampleAverage.getMedianAverage()+" "+differenceTime+" "+inMotion);
+        Log.i("average1", sampleAverage.getMedianAverage() + " " + differenceTime + " " + inMotion);
         if (sampleAverage.getMedianAverage() < .03 && differenceTime > 1000 && inMotion) {
             //inMotion=false;
 
-            if(inMotionTimerStartPoint<.00001){
+            if (inMotionTimerStartPoint < .00001) {
                 inMotionTimerStartPoint = System.currentTimeMillis();
             }
-            inMotionTimer=System.currentTimeMillis()-inMotionTimerStartPoint;
-            Log.i("inMotionTimer", inMotionTimer+"");
-            if(inMotionTimer>1000) {
+            inMotionTimer = System.currentTimeMillis() - inMotionTimerStartPoint;
+            Log.i("inMotionTimer", inMotionTimer + "");
+            if (inMotionTimer > 1000) {
                 startTime.setToNow();
                 shouldITalk = true;
                 pickupCount++;
@@ -114,16 +113,16 @@ public class PickUpCount implements WorkoutSession {
                 jerkStartTime = System.currentTimeMillis();
                 inMotion = false;
                 imOnLowerSurface = !imOnLowerSurface;
-                inMotionTimer=0;
-                inMotionTimerStartPoint=0;
+                inMotionTimer = 0;
+                inMotionTimerStartPoint = 0;
             }
         } else if (sampleAverage.getMedianAverage() > .35 && !inMotion) {
             inMotion = true;
-            inMotionTimer=0;
-            inMotionTimerStartPoint=0;
-        } else{
-            inMotionTimer=0;
-            inMotionTimerStartPoint=0;
+            inMotionTimer = 0;
+            inMotionTimerStartPoint = 0;
+        } else {
+            inMotionTimer = 0;
+            inMotionTimerStartPoint = 0;
         }
 
         if (!mediaChecked) {
@@ -175,10 +174,7 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public boolean workoutFinished() {
-        if (pickupCount == getPickupCountMax) {
-            return true;
-        }
-        return false;
+        return pickupCount == getPickupCountMax;
     }
 
     @Override

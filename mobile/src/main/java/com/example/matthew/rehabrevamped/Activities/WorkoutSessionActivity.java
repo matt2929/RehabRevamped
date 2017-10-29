@@ -24,12 +24,14 @@ import com.example.matthew.rehabrevamped.UserWorkoutViews.HorizontalPickUpCountV
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PhoneNumberView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PickUpCountView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.TwistCupView;
+import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.WalkWithCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.viewabstract;
 import com.example.matthew.rehabrevamped.UserWorkouts.HorizontalPickUpCount;
 import com.example.matthew.rehabrevamped.UserWorkouts.PhoneNumber;
 import com.example.matthew.rehabrevamped.UserWorkouts.PickUpCount;
 import com.example.matthew.rehabrevamped.UserWorkouts.TwistCup;
+import com.example.matthew.rehabrevamped.UserWorkouts.UnlockPhone;
 import com.example.matthew.rehabrevamped.UserWorkouts.WalkWithCup;
 import com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession;
 import com.example.matthew.rehabrevamped.Utilities.CalculateAverages;
@@ -241,7 +243,6 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 if (mNode != null) {
                     byte[] bytes = (message.getBytes());
-
                     Wearable.MessageApi.sendMessage(mGoogleApiClient, mNode.getId(),
                             "/rehabphonetowatch", bytes).await();
                 } else {
@@ -366,8 +367,6 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 currentView.stringInput(currentWorkout.stringOut());
                 currentView.invalidate();
-
-                //sendAMessageToWatch(MessagingValues.WORKOUTDISPLAYDATA + ",\n\n\n\n" + currentWorkout.result());
                 sendWorkoutStringToWatchCount = 0;
             }
             //Save Game
@@ -532,6 +531,9 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     }
 
     public void setActivityForAuto(String choice) {
+        final UnlockPhoneView unlockPhoneView = new UnlockPhoneView(getApplicationContext());
+        UnlockPhone unlockPhone;
+
         switch (choice) {
             case "V.Pickup":
                 currentView = new PickUpCountView(getApplicationContext());
@@ -545,7 +547,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 currentView = new TwistCupView(getApplicationContext());
                 currentWorkout = new TwistCup();
                 break;
-            case "PhoneNumber":
+            case "Phone Num":
                 PhoneNumberView phoneNumberView = new PhoneNumberView(getApplicationContext());
                 currentView = phoneNumberView;//if phone number doesn't work this is why
                 currentWorkout = new PhoneNumber(phoneNumberView);
@@ -553,6 +555,19 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             case "WalkSpill":
                 currentView = new WalkWithCupView(getApplicationContext());
                 currentWorkout = new WalkWithCup();
+                break;
+            case "Unlock Key":
+                currentView = unlockPhoneView;
+                unlockPhone = new UnlockPhone((UnlockPhoneView) currentView);
+                unlockPhone.setName("Key Unlock");
+                currentWorkout = unlockPhone;
+
+                break;
+            case "Unlock Door":
+                currentView = unlockPhoneView;
+                unlockPhone = new UnlockPhone((UnlockPhoneView) currentView);
+                unlockPhone.setName("Door Unlock");
+                currentWorkout = unlockPhone;
                 break;
         }
 

@@ -18,8 +18,10 @@ public class DecodeInputFile {
         params.add(new WorkoutParameters("V.Pickup", "Cup", 1, new boolean[]{true,true,true}));
         params.add(new WorkoutParameters("H.Pickup", "Cup", 2,  new boolean[]{true,true,true}));
         params.add(new WorkoutParameters("Twist", "Cup", 3,  new boolean[]{true,true,true}));
-        params.add(new WorkoutParameters("PhoneNumber", "None", 4,  new boolean[]{true,true,true}));
+        params.add(new WorkoutParameters("Phone Num", "None", 4, new boolean[]{true, true, true}));
         params.add(new WorkoutParameters("WalkSpill", "Bowl", 5,  new boolean[]{true,true,true}));
+        params.add(new WorkoutParameters("Unlock Key", "Key", 5, new boolean[]{true, true, true}));
+        params.add(new WorkoutParameters("Unlock Door", "Door", 5, new boolean[]{true, true, true}));
     }
 
     public ArrayList<WorkoutParameters> getWorkoutParams() {
