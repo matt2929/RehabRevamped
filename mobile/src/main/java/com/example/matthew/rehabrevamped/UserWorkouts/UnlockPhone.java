@@ -157,7 +157,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "turn key following the line" +maxTimes+" times.";
+        return "turn key following the line from side to side " +maxTimes+" times.";
     }
 
     /**

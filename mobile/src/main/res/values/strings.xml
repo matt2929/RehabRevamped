@@ -2,8 +2,8 @@
     <string name="app_name">RehabRevamped</string>
     <string name="red_line">The red line represents the expected jerk score</string>
     <string name="blue_line">The blue line represents the average jerk score</string>
-    <string name="left_hand">Left Hand</string>
-    <string name="right_hand">Right Hand</string>
+    <string name="left_hand">Left \n Hand</string>
+    <string name="right_hand">Right \n Hand</string>
     <string name="button">Button</string>
     <string name="pour">Pour</string>
     <string name="key_unlock">Key Unlock</string>

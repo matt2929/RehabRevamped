@@ -390,6 +390,27 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                     tts.speak(currentWorkout.getGrade() + "", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
                 }
+                float average = pastWorkoutsThreadRetrieve.getSpecificWorkoutAverage(currentWorkout.getWorkoutName());
+                float percentError = (Math.abs(average-currentWorkout.getGrade())/((average+currentWorkout.getGrade())/2))*100;
+                Log.i("sysye",""+(average-currentWorkout.getGrade()));
+                if((average-currentWorkout.getGrade())>10){
+                    tts.speak("you did slightly above average", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(),
+                            "you did slightly above average",
+                            Toast.LENGTH_LONG).show();
+                }else if((average-currentWorkout.getGrade())<-10) {
+                    tts.speak("you did slightly below average", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(),
+                            "you did slightly below average",
+                            Toast.LENGTH_LONG).show();
+                }
+                else{
+                    tts.speak("you did about average", TextToSpeech.QUEUE_ADD, null);
+                    Toast.makeText(getApplicationContext(),
+                            "you did about average",
+                            Toast.LENGTH_LONG).show();
+                }
+
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "RehabRevamped");
                 if (!file.exists()) {
                     file.mkdir();

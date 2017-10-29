@@ -38,7 +38,7 @@ public class UnlockPhoneView extends viewabstract {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         focalPoint.set(getWidth()/2,(7*getHeight())/8);
-        horzontalMax=focalPoint.y/2 -10;
+        horzontalMax=focalPoint.y/3;
         yellowPaint.setStrokeWidth(3);
         yellowPaint.setStyle(Paint.Style.STROKE);
         redPaint.setStrokeWidth(10);
