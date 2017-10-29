@@ -49,6 +49,7 @@ public class UnlockPhone implements WorkoutSession {
     private float GyroY;
     private float GyroZ;
     private int baseline;
+    private int buffer = 250;
 
     public UnlockPhone(UnlockPhoneView UPV){
         unlockPhoneView=UPV;
@@ -86,26 +87,25 @@ public class UnlockPhone implements WorkoutSession {
         GyroY=gyroY;
         GyroZ=gyroZ;
         baseline = getBaseline();
-        Log.i("Points",x+" "+y);
 
         distance=unlockPhoneView.getHorizontalMax();
         if(targetValue==0){
-            targetValue=(unlockPhoneView.getFocalPoint().x)-25;
+            targetValue=(unlockPhoneView.getFocalPoint().x)-buffer;
         }
-        if (targetValue<25){
-            if(x<=targetValue+40){
+        if (targetValue<buffer){
+            if(x<=targetValue+buffer){
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
-                targetValue=(unlockPhoneView.getFocalPoint().x)-25;
+                targetValue=(unlockPhoneView.getFocalPoint().x)-buffer;
                 runs.add(analyzeRun()-baseline);
                 points.clear();
             }
         }
         else{
-            if(x>=targetValue-40){
+            if(x>=targetValue-buffer){
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
-                targetValue=-(unlockPhoneView.getFocalPoint().x)+25;
+                targetValue=-(unlockPhoneView.getFocalPoint().x)+buffer;
                 runs.add(analyzeRun());
                 points.clear();
             }
