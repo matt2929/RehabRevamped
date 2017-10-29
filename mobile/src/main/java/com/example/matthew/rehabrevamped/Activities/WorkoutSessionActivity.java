@@ -33,6 +33,7 @@ import com.example.matthew.rehabrevamped.UserWorkouts.TwistCup;
 import com.example.matthew.rehabrevamped.UserWorkouts.WalkWithCup;
 import com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession;
 import com.example.matthew.rehabrevamped.Utilities.CalculateAverages;
+import com.example.matthew.rehabrevamped.Utilities.PastWorkoutsThreadRetrieve;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
 import com.example.matthew.rehabrevamped.Utilities.SaveDataInTextFile;
 import com.example.matthew.rehabrevamped.Utilities.SerializeWorkoutData;
@@ -85,11 +86,13 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     String autoPreviousWorkout = "";
     protected PowerManager.WakeLock mWakeLock;
     ArrayList<WorkoutParameters> workoutParameterses;
+    PastWorkoutsThreadRetrieve pastWorkoutsThreadRetrieve;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
+        pastWorkoutsThreadRetrieve = new PastWorkoutsThreadRetrieve(getApplicationContext());
         if (bundle != null) {
 
             autoPreviousWorkout = bundle.getString("Auto");
@@ -369,6 +372,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
             }
             //Save Game
             if (currentWorkout.workoutFinished()) {
+
                 if (currentWorkout.getWorkoutName().equals("Unlock Phone")) {
                     saveString = "";
                     for (String s : currentWorkout.saveArrayData()) {

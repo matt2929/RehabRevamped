@@ -93,7 +93,7 @@ public class UnlockPhone implements WorkoutSession {
             targetValue=(unlockPhoneView.getFocalPoint().x)-25;
         }
         if (targetValue<25){
-            if(x<=targetValue+40){
+            if (x <= targetValue + -40) {
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
                 targetValue=(unlockPhoneView.getFocalPoint().x)-25;
@@ -102,7 +102,7 @@ public class UnlockPhone implements WorkoutSession {
             }
         }
         else{
-            if(x>=targetValue-40){
+            if (x >= targetValue + 40) {
                 time++;
                 tts.speak(time + "", TextToSpeech.QUEUE_ADD, null);
                 targetValue=-(unlockPhoneView.getFocalPoint().x)+25;

@@ -11,13 +11,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.matthew.rehabrevamped.Activities.WorkoutOrHistory">
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <Button
+        android:id="@+id/imageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        app:srcCompat="@drawable/rehabicon" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:background="@drawable/rehabicon" />
 
     <LinearLayout
         android:layout_width="wrap_content"
