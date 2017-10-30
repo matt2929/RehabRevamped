@@ -2,7 +2,6 @@ package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.example.matthew.rehabrevamped.R;
@@ -88,11 +87,10 @@ public class PourCup implements WorkoutSession {
                                     outOfSpace = true;
                                     outOfSpace = false;
                                     pitcher[cupSearch] = pitcher[cupSearch] + 1;
-                                    whatToSay = "Pouring too quick! Beer is everywhere!";
+                                    whatToSay = "Please Pour Slower";
                                     shouldISpeak = true;
                                     mediaPlayer.pause();
                                     outOfSpace = true;
-
                                 } else {
 
                                     pitcher[cupSearch] = pitcher[cupSearch] + 1;

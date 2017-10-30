@@ -36,6 +36,7 @@ public class TwistCup implements WorkoutSession {
     float lastGyroZ = 0;
     GripAnalysis gripAnalysis = new GripAnalysis();
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(1);
+    long timerSave = System.currentTimeMillis();
 
     public TwistCup() {
 
@@ -48,7 +49,7 @@ public class TwistCup implements WorkoutSession {
     }
     @Override
     public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
-                jerkScoreAnalysis.jerkAdd(accX, accY, accZ,accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
+        jerkScoreAnalysis.jerkAdd(gyroX, gyroY, gyroZ, accTime, accX, accY, accZ, gyroTime, magX, magY, magZ, magTime);
      //           workoutShakeTrack.analyseData(accX, accY, accZ);
                 float differenceVAL = gyroX - lastGyroZ;
                 lastGyroZ = gyroX;
@@ -57,6 +58,8 @@ public class TwistCup implements WorkoutSession {
                 //  holdAccuracy(accX, accY, accZ);
 
                 if (differenceVAL < 3 && lastDifference > 3 && (Math.abs(nowTime - startTime)) > 1000) {
+                    jerkScoreAnalysis.jerkCompute(Math.abs(nowTime - System.currentTimeMillis()));
+                    timerSave = System.currentTimeMillis();
                     shouldITalk = true;
                     pickupCount++;
                     whatToSay = "" + pickupCount;
@@ -68,10 +71,7 @@ public class TwistCup implements WorkoutSession {
 
     @Override
     public boolean workoutFinished() {
-        if (pickupCount == getPickupCountMax) {
-            return true;
-        }
-        return false;
+        return pickupCount == getPickupCountMax;
     }
 
     @Override
@@ -117,7 +117,9 @@ public class TwistCup implements WorkoutSession {
 
     @Override
     public float getJerkScore() {
-        return jerkScoreAnalysis.getJerkAverage();
+        int answer = jerkScoreAnalysis.getJerkAverage().intValue();
+        Log.e("jerk twist", "" + answer);
+        return answer;
     }
 
     @Override
@@ -129,7 +131,9 @@ public class TwistCup implements WorkoutSession {
 
     @Override
     public int getGrade() {
-        return jerkScoreAnalysis.getJerkAverage().intValue();
+        int answer = 133;
+        Log.e("jerk twist", "" + answer);
+        return answer;
     }
 
     @Override

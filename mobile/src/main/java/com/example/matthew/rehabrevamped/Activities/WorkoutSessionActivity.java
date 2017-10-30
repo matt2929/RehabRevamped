@@ -88,13 +88,12 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     String autoPreviousWorkout = "";
     protected PowerManager.WakeLock mWakeLock;
     ArrayList<WorkoutParameters> workoutParameterses;
-    PastWorkoutsThreadRetrieve pastWorkoutsThreadRetrieve;
+    PastWorkoutsThreadRetrieve pastWorkoutsThreadRetrieve = WelcomeScreen.pastWorkoutsThreadRetrieve;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        pastWorkoutsThreadRetrieve = new PastWorkoutsThreadRetrieve(getApplicationContext());
         if (bundle != null) {
 
             autoPreviousWorkout = bundle.getString("Auto");

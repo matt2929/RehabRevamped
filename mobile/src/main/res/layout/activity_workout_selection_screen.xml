@@ -35,7 +35,7 @@
 
             <Button
                 android:id="@+id/pickupcupchoice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
@@ -47,7 +47,7 @@
 
             <Button
                 android:id="@+id/horizontalpickupcupchoice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
@@ -56,12 +56,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/holo_orange_light"
+                android:background="@android:color/holo_blue_dark"
                 android:text="@string/horizontal_pick_up_cup" />
 
             <Button
                 android:id="@+id/twistcupchoice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
@@ -70,11 +70,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/holo_green_light"
+                android:background="@android:color/holo_blue_light"
                 android:text="@string/twist_cup" />
+
             <Button
                 android:id="@+id/phonenumberchoice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
@@ -88,7 +89,7 @@
 
             <Button
                 android:id="@+id/walkchoice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
@@ -97,12 +98,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/holo_purple"
+                android:background="@android:color/holo_green_light"
                 android:text="@string/walk_with_phone" />
 
             <Button
                 android:id="@+id/unlockchoice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
@@ -111,40 +112,70 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/holo_red_dark"
+                android:background="@android:color/holo_orange_dark"
                 android:text="@string/key_unlock" />
 
             <Button
                 android:id="@+id/PourSelect"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/unlockchoice"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/holo_orange_light"
+                android:text="@string/pour" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/PourSelect"
+                android:background="?android:attr/colorPressedHighlight"
                 android:layout_margin="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/pour"
-                android:background="@android:color/holo_blue_dark"
-                />
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginTop="20dp"
-                android:background="?android:attr/colorPressedHighlight"
                 android:text="@string/button"
                 android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/pickupBowlV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/button2"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/holo_red_dark"
+                android:text="Verticle Pick Up Bowl" />
+
+            <Button
+                android:id="@+id/pickupBowlHV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/PourSelect"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/holo_purple"
+                android:text="Horizontal Pick Up Bowl" />
 
             <View
                 android:id="@+id/fakeView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_centerInParent="true" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

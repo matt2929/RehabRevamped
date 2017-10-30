@@ -1,15 +1,11 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PhoneNumberView;
-import com.example.matthew.rehabrevamped.UserWorkoutViews.WorkoutView;
-import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
 
 /**
  * Created by research on 9/5/2017.
@@ -178,7 +174,7 @@ public class PhoneNumber implements WorkoutSession{
 
     @Override
     public String sayHowToHoldCup() {
-        return "Type in the phone number shown above as accurately and quickly as possible.";
+        return "Type in the phone number shown above as accurately and quickly as possible. You can hold the phone in your hand.";
     }
 
     @Override

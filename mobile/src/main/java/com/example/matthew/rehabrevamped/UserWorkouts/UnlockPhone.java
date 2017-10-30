@@ -1,20 +1,14 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.example.matthew.rehabrevamped.Activities.WorkoutSessionActivity;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
-import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Objects;
 
 /**
  * Created by Matthew on 9/25/2016.
@@ -157,7 +151,7 @@ public class UnlockPhone implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "turn key following the line from side to side " +maxTimes+" times.";
+        return "With the key in contact with the phone screen, rotate the key clockwise and counterclockwise. Try to follow the arc as accurately as possible. Rotate back and forth" + maxTimes + " times.";
     }
 
     /**

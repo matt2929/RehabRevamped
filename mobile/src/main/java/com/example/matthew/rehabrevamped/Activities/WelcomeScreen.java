@@ -10,21 +10,22 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.matthew.rehabrevamped.R;
+import com.example.matthew.rehabrevamped.Utilities.PastWorkoutsThreadRetrieve;
 
 public class WelcomeScreen extends Activity {
 Button button;
     TextView textView;
     boolean entered=false;
     public static String Username = "";
+    static PastWorkoutsThreadRetrieve pastWorkoutsThreadRetrieve;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        pastWorkoutsThreadRetrieve = new PastWorkoutsThreadRetrieve(getApplicationContext());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);

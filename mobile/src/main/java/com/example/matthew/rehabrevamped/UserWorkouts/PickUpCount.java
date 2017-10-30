@@ -5,8 +5,6 @@ import android.media.MediaPlayer;
 import android.text.format.Time;
 import android.util.Log;
 
-
-import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.GripAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
@@ -29,6 +27,7 @@ public class PickUpCount implements WorkoutSession {
     double lastSlope = 0;
     double collisionNumber = 0;
     float a = 0;
+    String name = "";
     boolean imOnLowerSurface = true;
     long StartTime = System.currentTimeMillis();
     ArrayList<String> stringsIHaveSaid = new ArrayList<>();
@@ -213,7 +212,9 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public String getWorkoutName() {
+        if (name.equals(""))
         return "Pick Up Put Down";
+        return name;
     }
 
     @Override
@@ -250,7 +251,19 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-       return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table and when I count pick up the cup again.";
+        if (name.equals("")) {
+            return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table. When I count pick up the cup again.";
+        } else {
+            return "In this workout you will put the bowl above your head and back onto the table. Be sure to let it sit on the table. When I count pick up the bowl again.";
+
+        }
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

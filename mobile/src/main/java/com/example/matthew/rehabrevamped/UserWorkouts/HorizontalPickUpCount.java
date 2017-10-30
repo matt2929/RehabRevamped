@@ -1,11 +1,9 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.example.matthew.rehabrevamped.R;
 import com.example.matthew.rehabrevamped.Utilities.GripAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.JerkScoreAnalysis;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
@@ -38,7 +36,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
     boolean inMotion = false;
     boolean hasStarted = false;
     long startOfWorkoutForGrade = System.currentTimeMillis();
-
+    String name = "";
     //Jerk Stuff
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(2);
     long jerkStartTime = System.currentTimeMillis();
@@ -150,10 +148,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
 
     @Override
     public boolean workoutFinished() {
-        if (pickupCount == getPickupCountMax) {
-            return true;
-        }
-        return false;
+        return pickupCount == getPickupCountMax;
     }
 
     @Override
@@ -192,7 +187,9 @@ public class HorizontalPickUpCount implements WorkoutSession{
 
     @Override
     public String getWorkoutName() {
-        return "Horizontal Pick Up Put Down";
+        if (name.equals(""))
+            return "Pick Up Put Down";
+        return name;
     }
 
     @Override
@@ -229,7 +226,18 @@ public class HorizontalPickUpCount implements WorkoutSession{
 
     @Override
     public String sayHowToHoldCup() {
-        return "In this workout you will move the cup from side to side. Be sure to let it sit on the table and when I count pick up the cup again.";
+        if (name.equals("")) {
+            return "In this workout you will move the cup from side to side. Be sure to let it sit on the table when you bring it down. When I count, pick up the cup again.";
+        } else {
+            return "In this workout you will move the bowl from side to side. Be sure to let it sit on the table when you bring it down. When I count, pick up the bowl again.";
+        }
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

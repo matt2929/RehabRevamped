@@ -1,7 +1,6 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
@@ -39,7 +38,7 @@ public class WalkWithCup implements WorkoutSession {
     boolean haveIStarted = false;
     int total = 0;
     String whatShouldISay = "";
-    Long totalTime = 30000L;
+    Long totalTime = 10000L;
     Float totalAccT = 0f;
     float lastX = 9, lastY = 9, lastZ = 9;
     float averageTotal = 0;
@@ -108,10 +107,7 @@ public class WalkWithCup implements WorkoutSession {
     //ends after given time
     @Override
     public boolean workoutFinished() {
-        if (Math.abs(System.currentTimeMillis() - startTime) > totalTime) {
-            return true;
-        }
-        return false;
+        return Math.abs(System.currentTimeMillis() - startTime) > totalTime;
     }
 
     @Override
@@ -194,6 +190,6 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "Hold the cup or bowl infront of you. Walk at a comfortable pace. Start when I say, Begin.";
+        return "Hold the bowl infront of you. Walk fowards at a comfortable pace.";
     }
 }

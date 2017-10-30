@@ -1,6 +1,7 @@
 package com.example.matthew.rehabrevamped.Utilities;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * Created by matt2929 on 10/29/17.
  */
 
-public class PastWorkoutsThreadRetrieve implements Runnable {
+public class PastWorkoutsThreadRetrieve extends AsyncTask {
     SerializeWorkoutData serializeWorkoutData;
     Context context;
     ArrayList<WorkoutHistoricalData.WorkoutSession> workoutSessions;
@@ -17,19 +18,7 @@ public class PastWorkoutsThreadRetrieve implements Runnable {
 
     public PastWorkoutsThreadRetrieve(Context context) {
         this.context = context;
-        run();
-    }
-
-    @Override
-    public void run() {
-        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-        try {
-            serializeWorkoutData = new SerializeWorkoutData(context);
-            workoutSessions = serializeWorkoutData.getUsers(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        taskComplete = true;
+        execute();
     }
 
     public float getSpecificWorkoutAverage(String workName) {
@@ -44,5 +33,17 @@ public class PastWorkoutsThreadRetrieve implements Runnable {
         }
         if (num == -1) return -1;
         return (sum / num);
+    }
+
+    @Override
+    protected Object doInBackground(Object[] objects) {
+        try {
+            serializeWorkoutData = new SerializeWorkoutData(context);
+            workoutSessions = serializeWorkoutData.getUsers(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        taskComplete = true;
+        return null;
     }
 }

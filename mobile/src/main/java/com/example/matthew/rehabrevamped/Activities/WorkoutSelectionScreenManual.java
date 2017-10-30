@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.multidex.MultiDex;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,16 +17,21 @@ import com.example.matthew.rehabrevamped.UserWorkoutViews.PourCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.TwistCupView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.UnlockPhoneView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.WalkWithCupView;
-import com.example.matthew.rehabrevamped.UserWorkoutViews.WorkoutView;
 import com.example.matthew.rehabrevamped.UserWorkoutViews.viewabstract;
-import com.example.matthew.rehabrevamped.UserWorkouts.*;
+import com.example.matthew.rehabrevamped.UserWorkouts.HorizontalPickUpCount;
+import com.example.matthew.rehabrevamped.UserWorkouts.PhoneNumber;
+import com.example.matthew.rehabrevamped.UserWorkouts.PickUpCount;
+import com.example.matthew.rehabrevamped.UserWorkouts.PourCup;
+import com.example.matthew.rehabrevamped.UserWorkouts.TwistCup;
+import com.example.matthew.rehabrevamped.UserWorkouts.UnlockPhone;
+import com.example.matthew.rehabrevamped.UserWorkouts.WalkWithCup;
 
 import java.util.ArrayList;
 
 public class WorkoutSelectionScreenManual extends Activity {
     ArrayList<View> pickHandView = new ArrayList<>();
     ArrayList<View> selectWorkoutView = new ArrayList<>();
-    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt,unlockButt, leftHand, rightHand,walkButt,pourLiquid;
+    Button pickUpButt, horPickUpButt, twistButt, phoneNumberButt, unlockButt, leftHand, rightHand, walkButt, pourLiquid, pickUpBowlV, pickUpBowlH;
     View fakeView;
     static com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession CurrentWorkout;
     static viewabstract CurrentWorkoutView;
@@ -41,6 +44,8 @@ public class WorkoutSelectionScreenManual extends Activity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        pickUpBowlV = (Button) findViewById(R.id.pickupBowlV);
+        pickUpBowlH = (Button) findViewById(R.id.pickupBowlHV);
         pickUpButt = (Button) findViewById(R.id.pickupcupchoice);
         horPickUpButt = (Button) findViewById(R.id.horizontalpickupcupchoice);
         twistButt = (Button) findViewById(R.id.twistcupchoice);
@@ -49,7 +54,7 @@ public class WorkoutSelectionScreenManual extends Activity {
         rightHand = (Button) findViewById(R.id.workoutchoicerighthand);
         walkButt = (Button) findViewById(R.id.walkchoice);
         unlockButt = (Button) findViewById(R.id.unlockchoice);
-        fakeView = (View) findViewById(R.id.fakeView);
+        fakeView = findViewById(R.id.fakeView);
         pourLiquid = (Button) findViewById(R.id.PourSelect);
         pickHandView.add(fakeView);
         pickHandView.add(leftHand);
@@ -61,7 +66,8 @@ public class WorkoutSelectionScreenManual extends Activity {
         selectWorkoutView.add(phoneNumberButt);
         selectWorkoutView.add(walkButt);
         selectWorkoutView.add(unlockButt);
-
+        selectWorkoutView.add(pickUpBowlH);
+        selectWorkoutView.add(pickUpBowlV);
         leftHand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,6 +177,38 @@ public class WorkoutSelectionScreenManual extends Activity {
                     @Override
                     public void run() {
                         CurrentWorkout = new UnlockPhone(unlockPhoneView);
+                    }
+                }).start();
+            }
+        });
+        pickUpBowlV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewHandSelection();
+                final PickUpCountView pu = new PickUpCountView(getApplicationContext());
+                CurrentWorkoutView = pu;
+                PickUpCount puc = new PickUpCount();
+                puc.setName("V.Bowl Pick Up");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new PickUpCount();
+                    }
+                }).start();
+            }
+        });
+        pickUpBowlH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewHandSelection();
+                final HorizontalPickUpCountView pu = new HorizontalPickUpCountView(getApplicationContext());
+                CurrentWorkoutView = pu;
+                HorizontalPickUpCount puc = new HorizontalPickUpCount();
+                puc.setName("H.Bowl Pick Up");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentWorkout = new PickUpCount();
                     }
                 }).start();
             }
