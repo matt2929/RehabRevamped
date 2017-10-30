@@ -116,12 +116,26 @@
                 android:text="@string/key_unlock" />
 
             <Button
+                android:id="@+id/doorKnob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/unlockchoice"
+                android:layout_margin="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/holo_red_light"
+                android:text="Door Knob" />
+
+            <Button
                 android:id="@+id/PourSelect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/unlockchoice"
+                android:layout_below="@+id/doorKnob"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

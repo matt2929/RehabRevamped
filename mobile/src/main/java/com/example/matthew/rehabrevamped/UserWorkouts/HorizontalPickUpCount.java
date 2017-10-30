@@ -188,7 +188,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
     @Override
     public String getWorkoutName() {
         if (name.equals(""))
-            return "Pick Up Put Down";
+            return "H.Pick Up Cup";
         return name;
     }
 

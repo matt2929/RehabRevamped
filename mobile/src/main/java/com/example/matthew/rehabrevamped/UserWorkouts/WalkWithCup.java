@@ -38,7 +38,7 @@ public class WalkWithCup implements WorkoutSession {
     boolean haveIStarted = false;
     int total = 0;
     String whatShouldISay = "";
-    Long totalTime = 10000L;
+    Long totalTime = 15000L;
     Float totalAccT = 0f;
     float lastX = 9, lastY = 9, lastZ = 9;
     float averageTotal = 0;
@@ -188,6 +188,6 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        return "Hold the bowl infront of you. Walk fowards at a comfortable pace.";
+        return "Hold the bowl infront of you. Walk fowards at a comfortable pace. Walk for 15 Seconds";
     }
 }

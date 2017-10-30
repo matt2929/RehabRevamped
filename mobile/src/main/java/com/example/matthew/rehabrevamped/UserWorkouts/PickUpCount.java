@@ -213,7 +213,7 @@ public class PickUpCount implements WorkoutSession {
     @Override
     public String getWorkoutName() {
         if (name.equals(""))
-        return "Pick Up Put Down";
+            return "V.Pick Up Cup";
         return name;
     }
 
