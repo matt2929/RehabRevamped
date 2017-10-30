@@ -68,10 +68,8 @@ public class WalkWithCup implements WorkoutSession {
         long currentTime = System.currentTimeMillis();
         // delay over begin workout
         if ((currentTime - startTime) > 6000 && !haveIStarted) {
-            if (!haveIStarted) {
                 haveIStarted = true;
                 startTime = System.currentTimeMillis();
-            }
         }
         if (!mediaChecked) {
             mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);

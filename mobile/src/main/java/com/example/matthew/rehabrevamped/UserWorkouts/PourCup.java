@@ -202,7 +202,6 @@ public class PourCup implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        long StartTime = System.currentTimeMillis();
         return "In this workout you will hold the cup up and pretend to pour out water in front of you. Do not pour too quick or to slow.";
     }
 }

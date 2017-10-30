@@ -6,14 +6,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.Button;
 
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import static java.lang.Double.NaN;
 
 /**
  * Created by Matthew on 9/24/2016.
@@ -77,7 +74,7 @@ public class PourCupView extends viewabstract {
         }
 
         double angletemp=Math.atan((double) (-gravvY / gravvX));
-        if(angletemp==NaN){
+        if (gravvX == 0.0) {
             angletemp=0;
         }
         Log.e("ang:", "" + (float) Math.toDegrees(angletemp));
