@@ -194,7 +194,6 @@ public class WorkoutSelectionScreenManual extends Activity {
         unlockButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setViewHandSelection();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -207,6 +206,8 @@ public class WorkoutSelectionScreenManual extends Activity {
 
                     }
                 }).start();
+                setViewHandSelection();
+
             }
         });
         pickUpBowlV.setOnClickListener(new View.OnClickListener() {
@@ -229,10 +230,11 @@ public class WorkoutSelectionScreenManual extends Activity {
         pickUpBowlH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setViewHandSelection();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        setViewHandSelection();
                         HorizontalPickUpCountView pu = new HorizontalPickUpCountView(getApplicationContext());
                         CurrentWorkoutView = pu;
                         final HorizontalPickUpCount puc = new HorizontalPickUpCount();
