@@ -1,7 +1,6 @@
 package com.example.matthew.rehabrevamped.Utilities;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.example.matthew.rehabrevamped.Activities.WelcomeScreen;
 
@@ -60,7 +59,7 @@ SampleAverage sampleAverage = new SampleAverage();
         int minute = cal.get(Calendar.MINUTE);
         int second = cal.get(Calendar.SECOND);
 
-        _fileName = WelcomeScreen.Username + "_" + name + "_" + (month + 1) + "-" + day + "-" + year + "_[" + hour + "h~" + minute + "m~" + second + "s]." + fileType;
+        _fileName = WelcomeScreen.Username + "_" + name + "_" + (month + 1) + "-" + day + "-" + year + "_[" + hour + "h~" + minute + "m~" + second + "s]" + fileType;
     }
     public void saveData(String saveString,File fileParent) {
             try {

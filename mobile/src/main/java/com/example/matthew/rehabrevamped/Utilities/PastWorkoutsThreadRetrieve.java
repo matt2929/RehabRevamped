@@ -31,8 +31,11 @@ public class PastWorkoutsThreadRetrieve extends AsyncTask {
                 num++;
             }
         }
-        if (num == -1) return -1;
-        return (sum / num);
+        if (num == -1) {
+            return -1;
+        } else {
+            return (sum / num);
+        }
     }
 
     @Override

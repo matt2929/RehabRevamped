@@ -25,7 +25,7 @@ public class PhoneNumber implements WorkoutSession{
     private int lineCounter=-1;
     private boolean isAction;
     private int timesDone=0;
-    private int maxTimes=5;
+    private int maxTimes = 3;
     private boolean isDone=false;
     private boolean goodClick = false;
     /**

@@ -35,6 +35,7 @@ import com.example.matthew.rehabrevamped.UserWorkouts.UnlockPhone;
 import com.example.matthew.rehabrevamped.UserWorkouts.WalkWithCup;
 import com.example.matthew.rehabrevamped.UserWorkouts.WorkoutSession;
 import com.example.matthew.rehabrevamped.Utilities.CalculateAverages;
+import com.example.matthew.rehabrevamped.Utilities.JerkBack;
 import com.example.matthew.rehabrevamped.Utilities.PastWorkoutsThreadRetrieve;
 import com.example.matthew.rehabrevamped.Utilities.SampleAverage;
 import com.example.matthew.rehabrevamped.Utilities.SaveDataInTextFile;
@@ -61,6 +62,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     SaveDataInTextFile saveDataInTextFile;
     GoogleApiClient mGoogleApiClient;
     private Node mNode;
+    JerkBack jerkBack;
+
     private SensorManager mSensorManager;
     private float walkCount = 0;
     private float accX = 0, accY = 0, accZ = 0;
@@ -121,7 +124,6 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 return true;
             }
         });
-
         width = getWindow().getDecorView().getWidth();
         height = getWindow().getDecorView().getHeight();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -379,6 +381,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                     Log.i("saveString", saveString);
                 }
                 tts.speak("Workout Complete.", TextToSpeech.QUEUE_ADD, null);
+                jerkBack = new JerkBack(getApplicationContext(), currentWorkout.getWorkoutName());
+                jerkBack.saveData(currentWorkout.getGrade(), leftHand);
 
                 if (currentWorkout.getWorkoutName().equals("Phone Number")) {
                     tts.speak("Duration:" + currentWorkout.stringOut() + " seconds, score:" + currentWorkout.getGrade() + "%", TextToSpeech.QUEUE_ADD, null);
@@ -389,24 +393,30 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                     tts.speak(currentWorkout.getGrade() + "", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(), "" + currentWorkout.getGrade() + "", Toast.LENGTH_LONG).show();
                 }
-                float average = pastWorkoutsThreadRetrieve.getSpecificWorkoutAverage(currentWorkout.getWorkoutName());
+                float average = 10;
+                if (pastWorkoutsThreadRetrieve != null) {
+                    average = pastWorkoutsThreadRetrieve.getSpecificWorkoutAverage(currentWorkout.getWorkoutName());
+                } else {
+
+                }
                 float percentError = (Math.abs(average-currentWorkout.getGrade())/((average+currentWorkout.getGrade())/2))*100;
                 Log.i("sysye",""+(average-currentWorkout.getGrade()));
                 if((average-currentWorkout.getGrade())>10){
                     tts.speak("you did slightly above average", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(),
-                            "you did slightly above average",
+                            "Your doing great. Keep up the good work!",
                             Toast.LENGTH_LONG).show();
                 }else if((average-currentWorkout.getGrade())<-10) {
-                    tts.speak("you did slightly below average", TextToSpeech.QUEUE_ADD, null);
+                    tts.speak("Your doing great. Keep up the good work!"
+                            , TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(),
-                            "you did slightly below average",
+                            "Awesome Job!",
                             Toast.LENGTH_LONG).show();
                 }
                 else{
-                    tts.speak("you did about average", TextToSpeech.QUEUE_ADD, null);
+                    tts.speak("Nice Work!", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(),
-                            "you did about average",
+                            "Nice Work!",
                             Toast.LENGTH_LONG).show();
                 }
 

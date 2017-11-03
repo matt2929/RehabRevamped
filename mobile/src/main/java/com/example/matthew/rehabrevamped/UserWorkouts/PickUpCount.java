@@ -95,7 +95,7 @@ public class PickUpCount implements WorkoutSession {
 
         long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
         Log.i("average1", sampleAverage.getMedianAverage() + " " + differenceTime + " " + inMotion);
-        if (sampleAverage.getMedianAverage() < .03 && differenceTime > 1000 && inMotion) {
+        if (sampleAverage.getMedianAverage() < .03 && differenceTime > 750 && inMotion) {
             //inMotion=false;
 
             if (inMotionTimerStartPoint < .00001) {
@@ -103,7 +103,7 @@ public class PickUpCount implements WorkoutSession {
             }
             inMotionTimer = System.currentTimeMillis() - inMotionTimerStartPoint;
             Log.i("inMotionTimer", inMotionTimer + "");
-            if (inMotionTimer > 1000) {
+            if (inMotionTimer > 750) {
                 startTime.setToNow();
                 shouldITalk = true;
                 pickupCount++;
@@ -251,7 +251,7 @@ public class PickUpCount implements WorkoutSession {
 
     @Override
     public String sayHowToHoldCup() {
-        if (name.equals("")) {
+        if (name.equals("Verticle Pick up Cup")) {
             return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table. When I count pick up the cup again.";
         } else {
             return "In this workout you will put the bowl above your head and back onto the table. Be sure to let it sit on the table. When I count pick up the bowl again.";

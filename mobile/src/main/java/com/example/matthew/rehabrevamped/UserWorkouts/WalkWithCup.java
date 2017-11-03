@@ -25,7 +25,7 @@ public class WalkWithCup implements WorkoutSession {
 
     @Override
     public int getGrade() {
-        return spillageEvents*-1;
+        return spillageEvents;
     }
 
     int startCount;
@@ -62,7 +62,7 @@ public class WalkWithCup implements WorkoutSession {
         averageCount++;
         //if we started we will continually check for a 'spllash' event
         if (haveIStarted) {
-            isAnEvent(averageTotal,lastValue, accT, 1.5);
+            isAnEvent(averageTotal, lastValue, accT, 3);
         }
         lastValue = accT;
         long currentTime = System.currentTimeMillis();

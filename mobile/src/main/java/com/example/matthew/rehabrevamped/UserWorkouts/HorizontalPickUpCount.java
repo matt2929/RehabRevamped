@@ -86,7 +86,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
         holdAccuracy(accX, accY, accZ);
         long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
         Log.i("TTTT",""+sampleAverage.getMedianAverage());
-        if (sampleAverage.getMedianAverage() < .03 && differenceTime > 1000 && inMotion) {
+        if (sampleAverage.getMedianAverage() < .03 && differenceTime > 750 && inMotion) {
             startTime.setToNow();
             shouldITalk = true;
             pickupCount++;
@@ -226,7 +226,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
 
     @Override
     public String sayHowToHoldCup() {
-        if (name.equals("")) {
+        if (name.equals("Horizontal Pick up Cup")) {
             return "In this workout you will move the cup from side to side. Be sure to let it sit on the table when you bring it down. When I count, pick up the cup again.";
         } else {
             return "In this workout you will move the bowl from side to side. Be sure to let it sit on the table when you bring it down. When I count, pick up the bowl again.";
