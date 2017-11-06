@@ -2,31 +2,23 @@ package com.example.matthew.rehabrevamped.UserWorkoutViews;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.matthew.rehabrevamped.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -46,6 +38,7 @@ public class PhoneNumberView extends viewabstract  {
     private String  origonalPhoneNumber ="";
     private boolean lastCheck=true;
     MediaPlayer mpl;
+    Button clickedButt;
     int buttonLayoutID=View.generateViewId();
     private TextView phoneNumberText;
     //list to remove
@@ -141,25 +134,7 @@ public class PhoneNumberView extends viewabstract  {
                         button.setOnTouchListener(new OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                double d = Calendar.getInstance().getTimeInMillis();
-                                if (time < 0) {
-                                    time = d;
-                                }
-                                if ((d - time) > 25 && lastCheck) {
-                                    mpl.start();
-                                   // tts.speak(z + "", TextToSpeech.QUEUE_ADD, null);
-                                    currentPhoneNumber = currentPhoneNumber + z;
-                                    time = d;
-                                    button.setBackgroundColor(Color.GREEN);
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            button.setBackgroundColor(Color.GRAY);
-                                        }
-                                    }, 25);
-                                    lastCheck=false;
-                                }
+                                onTouchNumberButts(v, z);
                                 return false;
                             }
                         });
@@ -176,25 +151,7 @@ public class PhoneNumberView extends viewabstract  {
                     button.setOnTouchListener(new OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            double d = Calendar.getInstance().getTimeInMillis();
-                            if (time < 0) {
-                                time = d;
-                            }
-                            if ((d - time) > 10 && lastCheck) {
-                                //tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
-                                mpl.start();
-                                currentPhoneNumber = currentPhoneNumber + f;
-                                time = d;
-                                button.setBackgroundColor(Color.GREEN);
-                                final Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        button.setBackgroundColor(Color.GRAY);
-                                    }
-                                }, 10);
-                                lastCheck=false;
-                            }
+                            onTouchNumberButts(v, f);
                             return false;
                         }
                     });
@@ -208,6 +165,30 @@ public class PhoneNumberView extends viewabstract  {
                 layout.addView(buttonLayout);
             }
         }
+
+
+    public void onTouchNumberButts(View v, int f) {
+        double d = Calendar.getInstance().getTimeInMillis();
+        if (time < 0) {
+            time = d;
+        }
+        if ((d - time) > 10 && lastCheck) {
+            //tts.speak(f + "", TextToSpeech.QUEUE_ADD, null);
+            mpl.start();
+            currentPhoneNumber = currentPhoneNumber + f;
+            time = d;
+            //  button.setBackgroundColor(Color.GREEN);
+            final Handler handler = new Handler();
+            clickedButt = (Button) v;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //          button.setBackgroundColor(Color.GRAY);
+                }
+            }, 10);
+            lastCheck = false;
+        }
+    }
    // }
     /**
      * gridView is added to the screen and buttons are added to the grid view.
@@ -293,6 +274,31 @@ public class PhoneNumberView extends viewabstract  {
         phoneNumberText.setText(origonalPhoneNumber);
         resultText.setText("");
         Log.i("phonetest", origonalPhoneNumber);
+    }
+
+    public void setGoodClick() {
+        clickedButt.setBackgroundColor(Color.GREEN);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                clickedButt.setBackgroundColor(Color.GRAY);
+            }
+        }, 10);
+
+    }
+
+    public void setBadClick() {
+        clickedButt.setBackgroundColor(Color.RED);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                clickedButt.setBackgroundColor(Color.GRAY);
+            }
+        }, 10);
+
+
     }
     public void setLastCheck(boolean b){
         lastCheck=b;

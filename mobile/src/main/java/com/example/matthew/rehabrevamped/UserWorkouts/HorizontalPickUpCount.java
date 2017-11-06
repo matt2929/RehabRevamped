@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by research on 9/4/2017.
  */
 
-public class HorizontalPickUpCount implements WorkoutSession{
+public class HorizontalPickUpCount implements WorkoutSession {
     int getPickupCountMax = 10;
     SampleAverage sampleAverage = new SampleAverage();
 
@@ -41,7 +41,7 @@ public class HorizontalPickUpCount implements WorkoutSession{
     JerkScoreAnalysis jerkScoreAnalysis = new JerkScoreAnalysis(2);
     long jerkStartTime = System.currentTimeMillis();
     // sound stuff
-   // MediaPlayer mediaPlayer = null;
+    // MediaPlayer mediaPlayer = null;
     boolean mediaChecked = false;
 
     public HorizontalPickUpCount() {
@@ -50,11 +50,12 @@ public class HorizontalPickUpCount implements WorkoutSession{
 
     /**
      * The workout receives accelerometer, gyroscopic, magnetic data from the WorkoutSessionActivity and
-     if the average acc data is greater then .035 and inMotion==false it will time and save data as long as that
-     average stays above .03. When the average is below .03 it stops recording time and data and calls
-     JerkScoreAnalysis class tho calculate the jerkscore for that one action. it then increments the count and
-     reset the recording variables. This method also produces water pouring sound when the average gyro(X,Y and Z) is
-     not between .1 and -.1 and the Xgyro is greater is not between .5 and -.5
+     * if the average acc data is greater then .035 and inMotion==false it will time and save data as long as that
+     * average stays above .03. When the average is below .03 it stops recording time and data and calls
+     * JerkScoreAnalysis class tho calculate the jerkscore for that one action. it then increments the count and
+     * reset the recording variables. This method also produces water pouring sound when the average gyro(X,Y and Z) is
+     * not between .1 and -.1 and the Xgyro is greater is not between .5 and -.5
+     *
      * @param accX
      * @param accY
      * @param accZ
@@ -70,22 +71,29 @@ public class HorizontalPickUpCount implements WorkoutSession{
      * @param magTime
      * @param context
      */
-    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount,float magX,float magY,float magZ, long magTime, Context context) {
+    public void dataIn(float accX, float accY, float accZ, long accTime, float gyroX, float gyroY, float gyroZ, long gyroTime, int walkingCount, float magX, float magY, float magZ, long magTime, Context context) {
 
-        if(inMotion == false){
+        if (inMotion == false) {
             jerkStartTime = System.currentTimeMillis();
-        }else {
+        } else {
             jerkScoreAnalysis.jerkAdd(accX, accY, accZ, accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
         }
-        float differenceVAL = Math.abs(accY - countPickupLastVal);
-        a = differenceVAL;
-        countPickupLastVal = accY;
-        sampleAverage.addSmoothAverage(differenceVAL);
+        if (name.equals("Horizontal Pick up Cup")) {
+            float differenceVAL = Math.abs(accY - countPickupLastVal);
+            a = differenceVAL;
+            countPickupLastVal = accY;
+            sampleAverage.addSmoothAverage(differenceVAL);
+        } else {
+            float differenceVAL = Math.abs(accX - countPickupLastVal);
+            a = differenceVAL;
+            countPickupLastVal = accX;
+            sampleAverage.addSmoothAverage(differenceVAL);
+        }
         Time nowTime = new Time();
         nowTime.setToNow();
         holdAccuracy(accX, accY, accZ);
         long differenceTime = Math.abs(nowTime.toMillis(true) - startTime.toMillis(true));
-        Log.i("TTTT",""+sampleAverage.getMedianAverage());
+        Log.i("TTTT", "" + sampleAverage.getMedianAverage());
         if (sampleAverage.getMedianAverage() < .03 && differenceTime > 750 && inMotion) {
             startTime.setToNow();
             shouldITalk = true;
@@ -100,32 +108,32 @@ public class HorizontalPickUpCount implements WorkoutSession{
         }
 
         if (!mediaChecked) {
-      //      mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
+            //      mediaPlayer = MediaPlayer.create(context, R.raw.pouring_water);
             mediaChecked = true;
-     //       mediaPlayer.start();
-     //       mediaPlayer.setLooping(true);
+            //       mediaPlayer.start();
+            //       mediaPlayer.setLooping(true);
         }
 
 
-        double vector = Math.sqrt(Math.pow(gyroX,2)+Math.pow(gyroY,2)+Math.pow(gyroZ,2));
-        boolean a = (vector>.1 || vector<-.1);
-        boolean b = (gyroY>.2 || gyroY<-.2);
+        double vector = Math.sqrt(Math.pow(gyroX, 2) + Math.pow(gyroY, 2) + Math.pow(gyroZ, 2));
+        boolean a = (vector > .1 || vector < -.1);
+        boolean b = (gyroY > .2 || gyroY < -.2);
 
-     //   if((vector>.1 || vector<-.1) && (gyroY>.5 || gyroY<-.5)){
-   //         mediaPlayer.setVolume((float)1, (float)1);
-     //       if (!mediaPlayer.isPlaying()) {
-            //    Log.e("media", "started");
-       //         mediaPlayer.start();
-         //       mediaPlayer.setLooping(true);
-          //  } else {
+        //   if((vector>.1 || vector<-.1) && (gyroY>.5 || gyroY<-.5)){
+        //         mediaPlayer.setVolume((float)1, (float)1);
+        //       if (!mediaPlayer.isPlaying()) {
+        //    Log.e("media", "started");
+        //         mediaPlayer.start();
+        //       mediaPlayer.setLooping(true);
+        //  } else {
         //        Log.e("media", "continue");
-      //      }
-       // }
+        //      }
+        // }
         //else{
-           // if (mediaPlayer.isPlaying()) {
-             //   mediaPlayer.pause();
-          //  }
-       // }
+        // if (mediaPlayer.isPlaying()) {
+        //   mediaPlayer.pause();
+        //  }
+        // }
     }
 
 
@@ -219,9 +227,8 @@ public class HorizontalPickUpCount implements WorkoutSession{
 
     @Override
     public float[][] getHoldParamaters() {
-        return new float[][]{{0.7f,.3f,-5f,9.5f ,10f ,4.5f},{1f,10f ,-7.5f ,1.5f}};
+        return new float[][]{{0.7f, .3f, -5f, 9.5f, 10f, 4.5f}, {1f, 10f, -7.5f, 1.5f}};
     }
-
 
 
     @Override

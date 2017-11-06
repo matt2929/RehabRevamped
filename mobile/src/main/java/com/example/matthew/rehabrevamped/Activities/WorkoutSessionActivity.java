@@ -130,6 +130,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 10, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         tts = new TextToSpeech(getApplicationContext(), this);
+        tts.setSpeechRate(.8f);
+
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) {
@@ -402,7 +404,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 float percentError = (Math.abs(average-currentWorkout.getGrade())/((average+currentWorkout.getGrade())/2))*100;
                 Log.i("sysye",""+(average-currentWorkout.getGrade()));
                 if((average-currentWorkout.getGrade())>10){
-                    tts.speak("you did slightly above average", TextToSpeech.QUEUE_ADD, null);
+                    tts.speak("your doing great", TextToSpeech.QUEUE_ADD, null);
                     Toast.makeText(getApplicationContext(),
                             "Your doing great. Keep up the good work!",
                             Toast.LENGTH_LONG).show();

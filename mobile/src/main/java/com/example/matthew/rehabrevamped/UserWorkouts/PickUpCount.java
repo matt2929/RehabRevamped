@@ -252,9 +252,9 @@ public class PickUpCount implements WorkoutSession {
     @Override
     public String sayHowToHoldCup() {
         if (name.equals("Verticle Pick up Cup")) {
-            return "In this workout you will put the cup above your head and back onto the table. Be sure to let it sit on the table. When I count pick up the cup again.";
+            return "Move the cup onto the shelf then back onto the table. Wait for me to count before moving me again.";
         } else {
-            return "In this workout you will put the bowl above your head and back onto the table. Be sure to let it sit on the table. When I count pick up the bowl again.";
+            return "Move the bow onto the shelf then back onto the table. Wait for me to count before moving me again.";
 
         }
     }

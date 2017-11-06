@@ -1,6 +1,7 @@
 package com.example.matthew.rehabrevamped.UserWorkouts;
 
 import android.content.Context;
+import android.widget.Button;
 
 import com.example.matthew.rehabrevamped.UserWorkoutViews.PhoneNumberView;
 
@@ -28,6 +29,8 @@ public class PhoneNumber implements WorkoutSession{
     private int maxTimes = 3;
     private boolean isDone=false;
     private boolean goodClick = false;
+    private Button justClicked = null;
+
     /**
      * assigns the view and add Arraylists
      * @param WV
@@ -87,8 +90,10 @@ public class PhoneNumber implements WorkoutSession{
             if(isCorrect){
                 currentPhoneNumber=workoutView.getPhoneNumber();
                 workoutView.setResultText(currentPhoneNumber);
+                workoutView.setGoodClick();
             }else{
                 workoutView.setResultText(currentPhoneNumber);
+                workoutView.setBadClick();
             }
             workoutView.setLastCheck(true);
         }

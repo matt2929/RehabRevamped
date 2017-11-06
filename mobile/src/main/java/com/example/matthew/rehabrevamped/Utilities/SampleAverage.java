@@ -28,13 +28,14 @@ public class SampleAverage {
 
 
     public void addSmoothAverage(float a) {
-        smoothData.add(a);
-        if (smoothData.size() > SmoothingDataSize) {
-            smoothData.remove(0);
-        } else {
+        if (a != 0) {
+            smoothData.add(a);
+            if (smoothData.size() > SmoothingDataSize) {
+                smoothData.remove(0);
+            } else {
             }
-        SmoothAverage = averageArr(smoothData);
-
+            SmoothAverage = averageArr(smoothData);
+        }
     }
 
     public float getMedianAverage() {

@@ -80,7 +80,7 @@ public class WalkWithCup implements WorkoutSession {
     //if current acceleration is greater than averageAcceleration * thresehold make splash sound
     public void isAnEvent(float average, float prior, float present, double thresehold) {
 
-        if (Math.abs(prior-present)>average*thresehold) {
+        if (Math.abs(prior - present) > 3.0) {
             Log.e("Event", "T");
             spillageEvents++;
             triggerNoise();
