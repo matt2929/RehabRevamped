@@ -81,9 +81,21 @@ public class PickUpCount implements WorkoutSession {
         }else {
             jerkScoreAnalysis.jerkAdd(accX, accY, accZ, accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
         }
-        float differenceVAL = Math.abs(accY - countPickupLastVal);
+
+
+        float differenceVAL = 0f;
+        if (name.contains("Cup")) {
+            differenceVAL = Math.abs(accY - countPickupLastVal);
+            a = differenceVAL;
+            countPickupLastVal = accY;
+            sampleAverage.addSmoothAverage(differenceVAL);
+        } else {
+            differenceVAL = Math.abs(accX - countPickupLastVal);
+            a = differenceVAL;
+            countPickupLastVal = accX;
+            sampleAverage.addSmoothAverage(differenceVAL);
+        }
         a = differenceVAL;
-        countPickupLastVal = accY;
         if (sampleAverageTicker > 10) {
             sampleAverage.addSmoothAverage(differenceVAL);
         } else {

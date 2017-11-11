@@ -78,7 +78,7 @@ public class HorizontalPickUpCount implements WorkoutSession {
         } else {
             jerkScoreAnalysis.jerkAdd(accX, accY, accZ, accTime, gyroX, gyroY, gyroZ, gyroTime, magX, magY, magZ, magTime);
         }
-        if (name.equals("Horizontal Pick up Cup")) {
+        if (name.contains("Cup")) {
             float differenceVAL = Math.abs(accY - countPickupLastVal);
             a = differenceVAL;
             countPickupLastVal = accY;

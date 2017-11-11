@@ -69,6 +69,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
     private float accX = 0, accY = 0, accZ = 0;
     private float gyroX = 0, gyroY = 0, gyroZ = 0;
     private float gravX = 0, gravY = 0, gravZ = 0;
+    float xx = 0;
+    float yy = 0;
     //private float magX = 0, magY = 0, magZ = 0;
     private long timeAcc = 0, timeGyro = 0, timeMag = 0;
     private Sensor mAcc, mGyro, mStep, mGrav, mMag;
@@ -120,6 +122,8 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
         currentView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                xx = motionEvent.getX();
+                yy = motionEvent.getY();
                 currentWorkout.addTouche(motionEvent.getX(), motionEvent.getY());
                 return true;
             }
@@ -341,7 +345,7 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
                 currentWorkout.dataIn(accX, accY, accZ, timeAcc, gyroX, gyroY, gyroZ, timeGyro, (int) walkCount, 0, 0, 0, 0, getApplicationContext());
                 if (currentWorkout.getWorkoutName().equals("Phone Number")) {
                     saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv", "Time,duration,isCorrect");
-                } else if (currentWorkout.getWorkoutName().equals("Unlock Phone")) {
+                } else if (currentWorkout.getWorkoutName().contains("Unlock")) {
                     saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv", "Time,x,y,gyroX,gyroY,gyroZ");
                 } else {
                     saveDataInTextFile = new SaveDataInTextFile(getApplicationContext(), currentWorkout.getWorkoutName(), ".csv");
@@ -355,9 +359,9 @@ public class WorkoutSessionActivity extends Activity implements SensorEventListe
 
                 sampleAverage.addSmoothAverage(magDiff);
 
-                if (currentWorkout.getWorkoutName().equals("Phone Number") || currentWorkout.getWorkoutName().equals("Unlock Phone")) {
+                if (currentWorkout.getWorkoutName().equals("Phone Number") || currentWorkout.getWorkoutName().contains("Unlock")) {
                     saveString +=
-                            +hour + "h" + minute + "m" + second + "s" + milli + "ms," + currentWorkout.csvFormat();
+                            +hour + "h" + minute + "m" + second + "s" + milli + "ms," + xx + "," + yy + ";";
                 } else {
                     saveString +=
                             +hour + "h" + minute + "m" + second

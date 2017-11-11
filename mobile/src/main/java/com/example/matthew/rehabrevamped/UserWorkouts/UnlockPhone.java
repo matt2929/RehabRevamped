@@ -219,8 +219,8 @@ public class UnlockPhone implements WorkoutSession {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
         int second = cal.get(Calendar.SECOND);
-
-        dataArray.add( hour + ":" + minute + ":" + second + ","+x+","+y+","+GyroX+","+GyroY+","+GyroZ+";");
+        Log.i("points", x + " " + y);
+        dataArray.add(hour + ":" + minute + ":" + second + "," + unlockPhoneView.getFocalPoint().x + "," + unlockPhoneView.getFocalPoint().y + "," + GyroX + "," + GyroY + "," + GyroZ + ";");
         Log.i("dataArray",dataArray.toString());
     }
 
